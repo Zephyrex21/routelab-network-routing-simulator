@@ -123,10 +123,11 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   const sidebar = await readText('../src/components/layout/Sidebar.jsx');
   const topbar = await readText('../src/components/layout/Topbar.jsx');
   const overview = await readText('../src/features/dashboard/OverviewPage.jsx');
-  assert.equal(pkg.version, '0.9.0');
+  assert.equal(pkg.version, '0.9.1');
   assert.match(changelog, /0\.8\.0 — Phase 7/);
-  assert.match(changelog, /0\.9\.0 — Phase 8/);
-  assert.match(sidebar, /v0\.9\.0 · Phase 8/);
+  assert.match(changelog, /0\.9\.0 — Phase 8: Public Home/);
+  assert.match(changelog, /0\.9\.1 — Phase 8: Release Preparation/);
+  assert.match(sidebar, /v0\.9\.1 · Phase 8/);
   assert.match(topbar, /Phase 8 · final release preparation/);
   assert.match(overview, /Phase 8 · final release preparation/);
 });

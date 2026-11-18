@@ -1,7 +1,7 @@
 {
   "name": "routelab",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.9.1",
   "type": "module",
   "description": "An educational web-based simulator for Distance Vector and Link State routing algorithms.",
   "scripts": {

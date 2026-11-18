@@ -42,3 +42,19 @@ Review these manual cases:
 - Navigate directly to each `/lab/*` route and refresh.
 - Open each legacy URL and confirm it redirects to the corresponding `/lab/*` destination.
 - Review typography and both themes at desktop, tablet and mobile sizes.
+
+
+## Release preparation
+
+The follow-up Phase 8 release work adds:
+- GitHub Actions CI for test, build and high-severity npm audit.
+- Weekly Dependabot updates for npm and GitHub Actions.
+- Vercel SPA rewrite and baseline security headers.
+- Security vulnerability reporting instructions.
+- [Final academic report draft](03-final-academic-report.md).
+- [Algorithm flowcharts](04-algorithm-flowcharts.md).
+- [Test checklist and viva guide](05-test-and-viva-guide.md).
+- [Deployment and final release guide](06-deployment-and-final-release.md).
+- [Repository preparation notes](07-repository-preparation.md).
+
+The repository intentionally has no `LICENSE` file yet. The owner must choose the license before the project is represented as open source.

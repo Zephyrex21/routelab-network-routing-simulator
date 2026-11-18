@@ -8,6 +8,6 @@
 - [`phase-5/`](phase-5/) — packet forwarding and network failure experiments.
 - [`phase-6/`](phase-6/) — routing algorithm comparison and analytics.
 - [`phase-7/`](phase-7/) — QA, accessibility, dependency review and release hardening.
-- [`phase-8/`](phase-8/) — public homepage, dedicated lab route namespace, collapsible sidebar and typography refinement.
+- [`phase-8/`](phase-8/) — public homepage, dedicated lab route namespace, collapsible sidebar, release preparation, deployment and academic documentation.
 - [`architecture/`](architecture/) — module boundaries and code organization.
 - [`contracts/`](contracts/) — persisted project and simulation-run schemas.
