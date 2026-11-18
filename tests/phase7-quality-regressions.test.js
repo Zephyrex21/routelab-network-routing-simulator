@@ -39,11 +39,11 @@ test('Vite development and preview servers bind only to loopback', async () => {
   assert.match(config, /fs:\s*\{\s*strict:\s*true\s*\}/);
 });
 
-test('Vite is pinned to the patched 7.3.8 release and Node engine is documented', async () => {
+test('Vite 8 and its compatible React plugin are pinned and Node engine is documented', async () => {
   const pkg = await readJson('../package.json');
-  assert.equal(pkg.devDependencies.vite, '7.3.8');
+  assert.equal(pkg.devDependencies.vite, '8.3.8');
   assert.equal(pkg.engines.node, '>=20.19.0');
-  assert.equal(pkg.devDependencies['@vitejs/plugin-react'], '5.1.4');
+  assert.equal(pkg.devDependencies['@vitejs/plugin-react'], '6.3.0');
 });
 
 test('unused Recharts dependency has been removed from the project', async () => {
@@ -123,12 +123,13 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   const sidebar = await readText('../src/components/layout/Sidebar.jsx');
   const topbar = await readText('../src/components/layout/Topbar.jsx');
   const overview = await readText('../src/features/dashboard/OverviewPage.jsx');
-  assert.equal(pkg.version, '0.9.2');
+  assert.equal(pkg.version, '0.9.3');
   assert.match(changelog, /0\.8\.0 — Phase 7/);
   assert.match(changelog, /0\.9\.0 — Phase 8: Public Home/);
   assert.match(changelog, /0\.9\.1 — Phase 8: Release Preparation/);
   assert.match(changelog, /0\.9\.2 — Canvas interaction & visual polish/);
-  assert.match(sidebar, /v0\.9\.2 · Phase 8/);
+  assert.match(changelog, /0\.9\.3 — Vite 8 compatibility/);
+  assert.match(sidebar, /v0\.9\.3 · Phase 8/);
   assert.match(topbar, /Phase 8 · final release preparation/);
   assert.match(overview, /Phase 8 · final release preparation/);
 });
@@ -150,14 +151,14 @@ test('toast notifications announce errors assertively and other messages politel
 test('direct dependencies are pinned to explicit versions for a stable first lockfile', async () => {
   const pkg = await readJson('../package.json');
   assert.equal(pkg.dependencies['@xyflow/react'], '12.12.1');
-  assert.equal(pkg.dependencies['lucide-react'], '0.468.0');
+  assert.equal(pkg.dependencies['lucide-react'], '1.73.0');
   assert.equal(pkg.dependencies.react, '19.3.1');
   assert.equal(pkg.dependencies['react-dom'], '19.3.1');
   assert.equal(pkg.dependencies['react-router-dom'], '7.18.5');
   assert.equal(pkg.devDependencies['@tailwindcss/vite'], '4.3.5');
-  assert.equal(pkg.devDependencies['@vitejs/plugin-react'], '5.1.4');
+  assert.equal(pkg.devDependencies['@vitejs/plugin-react'], '6.3.0');
   assert.equal(pkg.devDependencies.tailwindcss, '4.3.5');
-  assert.equal(pkg.devDependencies.vite, '7.3.8');
+  assert.equal(pkg.devDependencies.vite, '8.3.8');
   const allVersions = [...Object.values(pkg.dependencies), ...Object.values(pkg.devDependencies)];
   assert.ok(allVersions.every((version) => /^\d+\.\d+\.\d+$/.test(version)), 'All direct dependencies must use exact versions');
 });

@@ -1,7 +1,7 @@
 {
   "name": "routelab",
   "private": true,
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "description": "An educational web-based simulator for Distance Vector and Link State routing algorithms.",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.3.5",
-    "@vitejs/plugin-react": "5.1.4",
+    "@vitejs/plugin-react": "6.3.0",
     "tailwindcss": "4.3.5",
     "vite": "8.3.8"
   },
