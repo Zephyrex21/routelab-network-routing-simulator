@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "projectId": "project-routing-basics",
+  "name": "Routing Basics",
+  "createdAt": "2026-11-18T00:00:00.000Z",
+  "updatedAt": "2026-11-18T00:00:00.000Z",
+  "topologyRevision": 1,
+  "routers": [
+    { "id": "R1", "label": "Router 1", "position": { "x": 120, "y": 160 } },
+    { "id": "R2", "label": "Router 2", "position": { "x": 360, "y": 80 } },
+    { "id": "R3", "label": "Router 3", "position": { "x": 600, "y": 160 } },
+    { "id": "R4", "label": "Router 4", "position": { "x": 360, "y": 320 } }
+  ],
+  "links": [
+    { "id": "L1", "sourceRouterId": "R1", "targetRouterId": "R2", "cost": 4, "status": "up" },
+    { "id": "L2", "sourceRouterId": "R2", "targetRouterId": "R3", "cost": 3, "status": "up" },
+    { "id": "L3", "sourceRouterId": "R1", "targetRouterId": "R4", "cost": 2, "status": "up" },
+    { "id": "L4", "sourceRouterId": "R4", "targetRouterId": "R3", "cost": 8, "status": "up" },
+    { "id": "L5", "sourceRouterId": "R2", "targetRouterId": "R4", "cost": 2, "status": "up" }
+  ]
+}

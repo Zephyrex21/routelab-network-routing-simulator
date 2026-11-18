@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f6f8" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="RouteLab — an interactive learning laboratory for network routing algorithms." />
+    <title>RouteLab — Routing, made visible</title>
+    <style>
+      html, body { margin: 0; min-height: 100%; }
+      .boot-fallback { min-height: 100vh; box-sizing: border-box; display: grid; align-content: center; justify-items: center; padding: 32px 20px; background: #f5f6f8; color: #171a21; text-align: center; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .boot-fallback-mark { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: 20px; border: 1px solid #d9dfeb; border-radius: 13px; color: #2864dc; background: #eaf1ff; font-size: 19px; font-weight: 750; }
+      .boot-fallback-kicker { margin: 0 0 10px; color: #2864dc; font-size: 9px; font-weight: 750; letter-spacing: .15em; }
+      .boot-fallback h1 { margin: 0; font-size: clamp(25px, 4vw, 34px); letter-spacing: -.055em; font-weight: 650; }
+      .boot-fallback-copy { max-width: 450px; margin: 12px 0 0; color: #606875; font-size: 13px; line-height: 1.7; }
+      .boot-fallback-help { max-width: 520px; margin: 22px 0 0; padding: 10px 13px; border: 1px solid #e2e7ef; border-radius: 9px; color: #6b7280; background: #fff; font-size: 11px; line-height: 1.6; }
+      @media (prefers-color-scheme: dark) { .boot-fallback { background: #111318; color: #f2f4f8; } .boot-fallback-help { border-color: #2b303b; color: #a4adbb; background: #191c23; } .boot-fallback-copy { color: #a4adbb; } }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <main class="boot-fallback" role="status" aria-live="polite">
+        <div class="boot-fallback-mark" aria-hidden="true">R</div>
+        <p class="boot-fallback-kicker">ROUTELAB / NETWORKING LABORATORY</p>
+        <h1>Preparing your workspace</h1>
+        <p class="boot-fallback-copy">RouteLab is loading its interface. This message will disappear when the application starts.</p>
+        <p class="boot-fallback-help">If this screen remains visible, open the browser console (F12) and check for a JavaScript or module-loading error.</p>
+      </main>
+    </div>
+    <noscript>RouteLab requires JavaScript to run. Please enable JavaScript and reload this page.</noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

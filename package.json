@@ -1,0 +1,37 @@
+{
+  "name": "routelab",
+  "private": true,
+  "version": "0.8.0",
+  "type": "module",
+  "description": "An educational web-based simulator for Distance Vector and Link State routing algorithms.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "npm test && npm run build",
+    "test": "node --test",
+    "test:engine": "node --test tests/routing-engine.test.js",
+    "test:simulation": "node --test tests/simulation-view-model.test.js",
+    "test:packet": "node --test tests/packet-routing.test.js",
+    "test:failure": "node --test tests/failure-experiment.test.js",
+    "test:comparison": "node --test tests/algorithm-comparison.test.js",
+    "audit": "npm audit --audit-level=high",
+    "check:release": "npm run check && npm run audit"
+  },
+  "dependencies": {
+    "@xyflow/react": "12.12.1",
+    "lucide-react": "0.468.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router-dom": "7.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.5",
+    "@vitejs/plugin-react": "5.1.4",
+    "tailwindcss": "4.3.5",
+    "vite": "7.3.8"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

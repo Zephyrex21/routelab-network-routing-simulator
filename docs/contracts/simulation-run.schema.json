@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://routelab.local/schemas/simulation-run.schema.json",
+  "title": "RouteLab Simulation Run Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runId", "projectId", "topologyRevision", "algorithm", "status", "startedAt", "events", "finalTables", "metrics"],
+  "properties": {
+    "runId": { "type": "string", "minLength": 1 },
+    "projectId": { "type": "string", "minLength": 1 },
+    "topologyRevision": { "type": "integer", "minimum": 1 },
+    "algorithm": { "enum": ["distance-vector", "link-state"] },
+    "status": { "enum": ["completed", "failed"] },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": ["string", "null"], "format": "date-time" },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sequence", "type", "message"],
+        "properties": {
+          "sequence": { "type": "integer", "minimum": 0 },
+          "type": { "type": "string", "minLength": 1 },
+          "actorRouterId": { "type": ["string", "null"] },
+          "message": { "type": "string", "minLength": 1 },
+          "affectedRouterIds": { "type": "array", "items": { "type": "string" } },
+          "details": { "type": "object" }
+        }
+      }
+    },
+    "finalTables": {
+      "type": "object",
+      "description": "Map keyed by router ID; each value contains route entries.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["destinationRouterId", "nextHopRouterId", "cost", "status"],
+          "properties": {
+            "destinationRouterId": { "type": "string" },
+            "nextHopRouterId": { "type": ["string", "null"] },
+            "cost": { "type": ["number", "null"], "minimum": 0 },
+            "status": { "enum": ["reachable", "unreachable"] },
+            "path": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "metrics": { "type": "object" },
+    "snapshots": { "type": "array", "description": "Optional replay snapshots. Each snapshot is associated with an event sequence." }
+  }
+}

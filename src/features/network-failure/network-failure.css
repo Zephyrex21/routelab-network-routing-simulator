@@ -1,0 +1,87 @@
+.failure-project-strip { margin-bottom: 17px; }
+.failure-lab-layout { display: grid; grid-template-columns: minmax(260px, 330px) minmax(0, 1fr); align-items: start; gap: 14px; }
+.failure-config-card { padding: 18px; }
+.failure-section-heading { justify-content: flex-start; margin-bottom: 18px; }
+.failure-section-icon { display: grid; width: 35px; height: 35px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--accent); background: var(--accent-soft); }
+.failure-section-heading h2 { font-size: 15px; }
+.failure-form-stack { display: flex; flex-direction: column; gap: 14px; }
+.failure-link-current { display: grid; grid-template-columns: 1fr auto; gap: 5px 8px; align-items: center; margin-top: -4px; padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-soft); }
+.failure-link-current > span { color: var(--text-tertiary); font-size: 7px; font-weight: 700; letter-spacing: .09em; }
+.failure-link-current > strong { grid-column: 1; font-size: 10px; }
+.failure-link-current > .badge { grid-column: 2; grid-row: 1 / span 2; }
+.failure-link-current > small { color: var(--text-secondary); font-size: 8px; }
+.failure-form-divider { height: 1px; margin: 1px 0; background: var(--line); }
+.failure-endpoint-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.failure-validation-hint { display: flex; align-items: flex-start; gap: 7px; color: var(--warning); font-size: 8px; line-height: 1.6; }
+.failure-validation-hint svg { flex: 0 0 auto; margin-top: 1px; }
+.failure-small-note { color: var(--text-tertiary); font-size: 7px; line-height: 1.65; }
+.failure-result-column { display: flex; min-width: 0; flex-direction: column; gap: 12px; }
+.failure-change-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 16px; }
+.failure-change-summary h2 { margin: 4px 0 0; font-size: 16px; font-weight: 700; letter-spacing: -.04em; }
+.failure-change-summary > p { width: 100%; margin: -2px 0 0; color: var(--text-secondary); font-size: 8px; line-height: 1.6; }
+.failure-change-values { display: flex; align-items: center; gap: 10px; }
+.failure-change-values > div { display: flex; flex-direction: column; gap: 4px; }
+.failure-change-values span { color: var(--text-tertiary); font-size: 7px; }
+.failure-change-values strong { font-size: 8px; }
+.failure-change-values > svg { color: var(--text-tertiary); }
+.failure-topology-comparison, .failure-outcome-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.failure-topology-card { min-width: 0; overflow: hidden; padding: 0; }
+.failure-topology-head { padding: 13px 14px 8px; }
+.failure-topology-head h3 { margin: 4px 0 0; font-size: 12px; letter-spacing: -.025em; }
+.packet-topology-before .packet-graph-link.link-route, .packet-topology-before .packet-graph-link.link-completed { stroke: var(--text-tertiary); opacity: .55; }
+.packet-topology-after .packet-graph-link.link-route, .packet-topology-after .packet-graph-link.link-completed { stroke: var(--success); }
+.failure-topology-card .packet-topology-view svg { max-height: 270px; }
+.failure-topology-card .packet-map-legend { padding: 8px 10px; font-size: 7px; }
+.failure-outcome-card { min-width: 0; padding: 14px; }
+.failure-outcome-header { align-items: flex-start; }
+.failure-outcome-header h3 { margin: 4px 0 0; font-size: 12px; }
+.failure-outcome-path { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; min-height: 44px; margin: 10px 0; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
+.failure-outcome-path > span { display: inline-flex; align-items: center; gap: 5px; color: var(--accent-strong); font-size: 8px; font-weight: 720; }
+.failure-outcome-path .failure-no-path { color: var(--text-tertiary); font-weight: 550; }
+.failure-outcome-metrics { display: flex; gap: 20px; }
+.failure-outcome-metrics > div { display: flex; flex-direction: column; gap: 4px; }
+.failure-outcome-metrics span { color: var(--text-tertiary); font-size: 7px; }
+.failure-outcome-metrics strong { font-size: 12px; }
+.failure-save-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; }
+.failure-save-copy { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.failure-save-icon { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line); border-radius: 9px; color: var(--accent); background: var(--accent-soft); }
+.failure-save-copy strong { font-size: 9px; }
+.failure-save-copy p { margin: 4px 0 0; color: var(--text-secondary); font-size: 7px; line-height: 1.6; }
+.failure-result-placeholder { display: flex; min-height: 360px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; padding: 28px; }
+.failure-result-placeholder-icon { display: grid; width: 43px; height: 43px; place-items: center; border: 1px solid var(--line); border-radius: 12px; color: var(--accent); background: var(--accent-soft); }
+.failure-result-placeholder h2 { max-width: 430px; font-size: 21px; }
+.failure-result-placeholder > p { max-width: 470px; margin: 0; font-size: 9px; }
+.failure-preview-stats { display: flex; gap: 30px; margin-top: 7px; }
+.failure-preview-stats > div { display: flex; flex-direction: column; gap: 4px; }
+.failure-preview-stats strong { font-size: 17px; }
+.failure-preview-stats span { color: var(--text-tertiary); font-size: 8px; }
+.failure-learning-note { display: flex; align-items: flex-start; gap: 12px; margin-top: 15px; padding: 14px 15px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface-soft); }
+.failure-note-icon { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line); border-radius: 9px; color: var(--accent); background: var(--surface); }
+.failure-learning-note > div:nth-child(2) { flex: 1; }
+.failure-learning-note strong { font-size: 9px; }
+.failure-learning-note p { margin: 4px 0 0; color: var(--text-secondary); font-size: 8px; line-height: 1.65; }
+.failure-empty-state { display: flex; min-height: 340px; flex-direction: column; align-items: center; justify-content: center; gap: 11px; text-align: center; }
+.failure-empty-icon { display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid var(--line); border-radius: 14px; color: var(--accent); background: var(--accent-soft); }
+.failure-empty-state h2 { max-width: 430px; margin: 0; font-size: 21px; letter-spacing: -.045em; }
+.failure-empty-state p { max-width: 440px; margin: 0 0 8px; color: var(--text-secondary); font-size: 10px; line-height: 1.7; }
+
+@media (max-width: 1080px) {
+  .failure-lab-layout { grid-template-columns: 280px minmax(0, 1fr); }
+  .failure-topology-comparison, .failure-outcome-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 850px) {
+  .failure-lab-layout { grid-template-columns: 1fr; }
+  .failure-form-stack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+  .failure-section-heading, .failure-form-divider, .failure-form-stack > .eyebrow, .failure-small-note, .failure-form-stack > .button { grid-column: 1 / -1; }
+  .failure-form-stack .failure-link-current { align-self: stretch; }
+}
+@media (max-width: 600px) {
+  .failure-project-strip, .failure-learning-note { align-items: flex-start; flex-direction: column; }
+  .failure-form-stack { display: flex; }
+  .failure-endpoint-row { grid-template-columns: 1fr; }
+  .failure-change-summary { align-items: flex-start; flex-direction: column; }
+  .failure-change-values { width: 100%; justify-content: space-between; }
+  .failure-topology-comparison, .failure-outcome-grid { grid-template-columns: 1fr; }
+  .failure-save-card { align-items: flex-start; flex-direction: column; }
+  .failure-save-card > .button { width: 100%; justify-content: center; }
+}
