@@ -6,7 +6,7 @@
 
 RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 8 — Release Preparation.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+> **Current status: Phase 8 — Release Preparation & Canvas Polish.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
 
 ## Run locally
 
@@ -68,6 +68,7 @@ The Phase 8 documentation contains:
 - [Algorithm flowcharts](docs/phase-8/04-algorithm-flowcharts.md)
 - [Testing checklist and viva preparation](docs/phase-8/05-test-and-viva-guide.md)
 - [Deployment and final release guide](docs/phase-8/06-deployment-and-final-release.md)
+- [Canvas interaction and visual polish](docs/phase-8/08-canvas-interaction-and-motion.md)
 
 Complete the report's identity fields, insert screenshots from the actual application, and paste real test/build/audit output before submitting it.
 

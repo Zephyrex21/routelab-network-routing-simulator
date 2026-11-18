@@ -6,7 +6,7 @@ import {
   ZoomIn, ZoomOut, X,
 } from 'lucide-react';
 import {
-  addEdge, Background, BackgroundVariant, Controls, MiniMap, ReactFlow,
+  addEdge, Background, BackgroundVariant, Controls, ReactFlow,
   useEdgesState, useNodesState,
 } from '@xyflow/react';
 import PageHeader from '../../components/layout/PageHeader.jsx';
@@ -487,8 +487,8 @@ function NetworkStudioContent() {
               nodesConnectable={toolMode === 'connect'}
               nodesDraggable={toolMode === 'select'}
               elementsSelectable
-              panOnDrag={toolMode === 'pan' ? true : [1, 2]}
-              selectionOnDrag={toolMode === 'select'}
+              panOnDrag={true}
+              selectionOnDrag={false}
               deleteKeyCode={['Backspace', 'Delete']}
               minZoom={0.25}
               maxZoom={2}
@@ -504,7 +504,6 @@ function NetworkStudioContent() {
               }}
             >
               <Background variant={BackgroundVariant.Dots} gap={19} size={1} color="var(--grid-dot)" />
-              <MiniMap pannable zoomable nodeColor="var(--accent)" maskColor="var(--overlay)" className="phase2-minimap" />
               <Controls showInteractive={false} position="bottom-right" />
             </ReactFlow>
             {nodes.length === 0 && (
@@ -521,7 +520,7 @@ function NetworkStudioContent() {
             <span><span className="legend-node" /> Router</span>
             <span><span className="legend-link" /> Active link</span>
             <span><span className="legend-link legend-link-down" /> Disabled link</span>
-            <span className="canvas-footer-note">Drag routers to reposition · Select an item to edit</span>
+            <span className="canvas-footer-note">Drag the empty canvas to pan · Drag routers to reposition</span>
           </div>
         </Card>
 

@@ -2,6 +2,7 @@ import {
   Activity, ArrowRight, ArrowUpRight, BarChart3, GitBranch, Network, Route,
   ShieldAlert, Waypoints, Moon, Sun, Sparkles,
 } from 'lucide-react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Brand from '../../components/layout/Brand.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -24,6 +25,27 @@ export default function PublicHomePage() {
   const { theme, toggleTheme } = useTheme();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('.public-site .reveal-on-view');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver((entries, activeObserver) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        activeObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="public-site">
       <header className="public-header">
@@ -43,7 +65,7 @@ export default function PublicHomePage() {
 
       <main className="public-main">
         <section className="public-hero">
-          <div className="public-hero-copy">
+          <div className="public-hero-copy reveal-on-view">
             <div className="public-kicker"><span className="eyebrow-mark" /> COMPUTER NETWORKS / INTERACTIVE LEARNING LAB</div>
             <Badge tone="success" dot>Explore routing, visually</Badge>
             <h1>See how networks <span>find their way.</span></h1>
@@ -61,7 +83,7 @@ export default function PublicHomePage() {
             </div>
           </div>
 
-          <div className="public-visual-wrap">
+          <div className="public-visual-wrap reveal-on-view" data-reveal-delay="120">
             <div className="public-visual-glow" />
             <div className="public-visual-window">
               <div className="public-window-bar">
@@ -83,13 +105,13 @@ export default function PublicHomePage() {
           </div>
         </section>
 
-        <section className="public-value-strip" aria-label="RouteLab project scope">
+        <section className="public-value-strip reveal-on-view" aria-label="RouteLab project scope">
           <div><span className="public-value-mark"><Network size={18} /></span><div><strong>One shared topology</strong><span>Both models use the same network input</span></div></div>
           <div><span className="public-value-mark"><Activity size={18} /></span><div><strong>Step-by-step learning</strong><span>Inspect events, tables and route choices</span></div></div>
           <div><span className="public-value-mark"><Sparkles size={18} /></span><div><strong>Safe experiments</strong><span>Change links without losing your baseline</span></div></div>
         </section>
 
-        <section className="public-section" id="features">
+        <section className="public-section reveal-on-view" id="features">
           <div className="public-section-heading">
             <div><span className="public-section-kicker">THE ROUTELAB WORKSPACE</span><h2>Everything you need to <span>understand the route.</span></h2></div>
             <p>Move from building a network to inspecting the decisions routers make. Each workspace focuses on one part of the routing process.</p>
@@ -98,7 +120,7 @@ export default function PublicHomePage() {
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
-                <Link to={feature.to} className="public-feature-card" key={feature.number}>
+                <Link to={feature.to} className="public-feature-card reveal-on-view" key={feature.number}>
                   <div className="public-feature-top"><span>{feature.number}</span><span className="public-feature-icon"><Icon size={19} strokeWidth={1.8} /></span></div>
                   <h3>{feature.title}</h3>
                   <p>{feature.description}</p>
@@ -109,20 +131,20 @@ export default function PublicHomePage() {
           </div>
         </section>
 
-        <section className="public-section public-algorithms" id="algorithms">
+        <section className="public-section public-algorithms reveal-on-view" id="algorithms">
           <div className="public-section-heading public-section-heading-tight">
             <div><span className="public-section-kicker">TWO ROUTING APPROACHES</span><h2>Different ideas. <span>One destination.</span></h2></div>
             <p>Explore how the two classic routing approaches learn about a network and calculate paths to destinations.</p>
           </div>
           <div className="public-algorithm-grid">
-            <article className="public-algorithm-card">
+            <article className="public-algorithm-card reveal-on-view">
               <div className="public-algorithm-icon"><GitBranch size={21} /></div>
               <span className="public-algorithm-index">01 / DISTANCE VECTOR</span>
               <h3>Learn from your neighbours.</h3>
               <p>Routers exchange distance information with their directly connected neighbours and iteratively refine their routing tables using the Bellman-Ford recurrence.</p>
               <Link to="/lab/simulation">Explore Distance Vector <ArrowRight size={15} /></Link>
             </article>
-            <article className="public-algorithm-card public-algorithm-card-accent">
+            <article className="public-algorithm-card public-algorithm-card-accent reveal-on-view">
               <div className="public-algorithm-icon"><Network size={21} /></div>
               <span className="public-algorithm-index">02 / LINK STATE</span>
               <h3>Build the bigger picture.</h3>
@@ -133,19 +155,19 @@ export default function PublicHomePage() {
           <p className="public-model-note">RouteLab is an educational simulator inspired by core Distance Vector and Link State concepts. It does not claim to implement complete production RIP or OSPF deployments.</p>
         </section>
 
-        <section className="public-section public-workflow" id="workflow">
+        <section className="public-section public-workflow reveal-on-view" id="workflow">
           <div className="public-section-heading public-section-heading-tight">
             <div><span className="public-section-kicker">A SIMPLE LEARNING FLOW</span><h2>Build. <span>Run. Understand.</span></h2></div>
             <p>Start with a topology and let the routing process unfold. You control the experiment and can inspect each result.</p>
           </div>
           <div className="public-workflow-steps">
-            <article><span>01</span><h3>Build your network</h3><p>Add routers, connect links and assign costs in Network Studio.</p></article>
-            <article><span>02</span><h3>Run a routing model</h3><p>Choose an algorithm and follow its updates, advertisements and calculations.</p></article>
-            <article><span>03</span><h3>Experiment with routes</h3><p>Trace a packet, change a link and compare the resulting routing decisions.</p></article>
+            <article className="reveal-on-view"><span>01</span><h3>Build your network</h3><p>Add routers, connect links and assign costs in Network Studio.</p></article>
+            <article className="reveal-on-view"><span>02</span><h3>Run a routing model</h3><p>Choose an algorithm and follow its updates, advertisements and calculations.</p></article>
+            <article className="reveal-on-view"><span>03</span><h3>Experiment with routes</h3><p>Trace a packet, change a link and compare the resulting routing decisions.</p></article>
           </div>
         </section>
 
-        <section className="public-final-cta">
+        <section className="public-final-cta reveal-on-view">
           <div><span className="public-section-kicker">READY TO EXPLORE?</span><h2>Make the invisible <span>part of the picture.</span></h2><p>Open the lab and start experimenting with network routing.</p></div>
           <Button size="lg" icon={Network} iconRight={ArrowRight} onClick={() => navigate('/lab/studio')}>Enter RouteLab</Button>
         </section>
