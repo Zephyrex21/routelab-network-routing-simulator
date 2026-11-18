@@ -1,4 +1,21 @@
+import { useEffect, useState } from 'react';
+
 export default function NetworkIllustration({ compact = false }) {
+  const [reducedMotion, setReducedMotion] = useState(() => (
+    typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ));
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return undefined;
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updatePreference = (event) => setReducedMotion(event.matches);
+    setReducedMotion(preference.matches);
+    preference.addEventListener?.('change', updatePreference);
+    return () => preference.removeEventListener?.('change', updatePreference);
+  }, []);
+
   const nodes = [
     { x: 92, y: 82, label: 'R1', active: true },
     { x: 246, y: 48, label: 'R2' },
@@ -30,7 +47,7 @@ export default function NetworkIllustration({ compact = false }) {
           <text className="illustration-node-label" x="0" y="39" textAnchor="middle">{node.label}</text>
         </g>
       ))}
-      <g className="illustration-packet" filter="url(#routerGlowPhase1)"><circle r="4"/><circle r="10" className="packet-orbit" /><animateMotion dur="13s" repeatCount="indefinite" path="M 92 82 L 246 48 L 410 95 L 338 218 L 132 218 L 92 82" /></g>
+      <g className="illustration-packet" filter="url(#routerGlowPhase1)"><circle r="4"/><circle r="10" className="packet-orbit" />{!reducedMotion && <animateMotion dur="13s" repeatCount="indefinite" path="M 92 82 L 246 48 L 410 95 L 338 218 L 132 218 L 92 82" />}</g>
     </svg>
   );
 }
