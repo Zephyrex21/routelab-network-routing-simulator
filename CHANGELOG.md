@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.1 — Phase 8: Release Preparation
+
+- Added GitHub Actions CI for tests, production build and high-severity dependency audit.
+- Added weekly Dependabot updates for npm and GitHub Actions.
+- Added Vercel SPA rewrite and baseline security headers for production hosting.
+- Added a security reporting policy.
+- Added the final academic report draft, algorithm flowcharts, test checklist and viva preparation guide.
+- Updated repository documentation and release instructions; no license was selected or added.
+
+
 ## 0.9.0 — Phase 8: Public Home & Workspace Shell Refinement
 
 - Added a public-facing RouteLab homepage at `/` with product introduction, feature pathways, routing model overview and clear entry points into the lab.

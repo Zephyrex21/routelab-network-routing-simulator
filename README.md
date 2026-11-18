@@ -1,10 +1,12 @@
 # RouteLab
 
+![RouteLab CI](https://github.com/Zephyrex21/routelab-network-routing-simulator/actions/workflows/ci.yml/badge.svg?branch=main)
+
 **An Interactive Web-Based Simulator for Distance Vector and Link State Routing Algorithms**
 
 RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 8 — Public Home & Workspace Shell Refinement.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+> **Current status: Phase 8 — Release Preparation.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
 
 ## Run locally
 
@@ -52,6 +54,22 @@ npm run preview
 | `/lab/compare` | Comparison Lab | Live route, routing-table, metrics and failure-scenario comparison |
 
 The original workspace paths (`/studio`, `/simulation`, `/packets`, `/failures`, `/compare` and `/overview`) redirect to their new `/lab/*` equivalents for bookmark compatibility. The public homepage intentionally renders without the lab sidebar; entering any lab route reveals the workspace shell.
+
+## Deployment and continuous integration
+
+The repository includes a GitHub Actions quality workflow that runs on pushes and pull requests targeting `main`. It installs the committed lockfile with `npm ci`, runs `npm test`, builds the production bundle and checks the dependency tree with `npm audit --audit-level=high`.
+
+Dependabot checks npm dependencies and GitHub Actions weekly. Vercel deployment configuration is included in `vercel.json`, including the SPA rewrite required by React Router history routes. See [Phase 8 deployment and release notes](docs/phase-8/06-deployment-and-final-release.md) before connecting the repository to a Vercel project.
+
+## Academic project documentation
+
+The Phase 8 documentation contains:
+- [Final project report draft](docs/phase-8/03-final-academic-report.md)
+- [Algorithm flowcharts](docs/phase-8/04-algorithm-flowcharts.md)
+- [Testing checklist and viva preparation](docs/phase-8/05-test-and-viva-guide.md)
+- [Deployment and final release guide](docs/phase-8/06-deployment-and-final-release.md)
+
+Complete the report's identity fields, insert screenshots from the actual application, and paste real test/build/audit output before submitting it.
 
 ## Phase 7 quality and security
 
