@@ -22,16 +22,17 @@ test('Vercel config includes baseline browser security headers', async () => {
 
 test('GitHub Actions CI installs the lockfile, tests, builds and audits high severity findings', async () => {
   const workflow = await readText('../.github/workflows/ci.yml');
-  assert.match(workflow, /pull_request:s*
-s*branches:s*[main]/);
-  assert.match(workflow, /push:s*
-s*branches:s*[main]/);
-  assert.match(workflow, /npm ci/);
-  assert.match(workflow, /npm test/);
-  assert.match(workflow, /npm run build/);
-  assert.match(workflow, /npm audit --audit-level=high/);
-  assert.match(workflow, /permissions:s*
-s*contents:s*read/);
+  const lines = workflow.split('\n').map((line) => line.trim());
+  assert.ok(lines.includes('pull_request:'), 'CI must run on pull requests');
+  assert.ok(lines.includes('push:'), 'CI must run on pushes');
+  assert.ok(lines.filter((line) => line === 'branches: [main]').length >= 2, 'CI must target main for both events');
+  assert.ok(workflow.includes('npm ci'));
+  assert.ok(workflow.includes('npm test'));
+  assert.ok(workflow.includes('npm run build'));
+  assert.ok(workflow.includes('npm audit --audit-level=high'));
+  assert.ok(lines.includes('contents: read'), 'CI token should have read-only content permission');
+  assert.ok(workflow.includes('actions/checkout@v7'));
+  assert.ok(workflow.includes('actions/setup-node@v7'));
 });
 
 test('Dependabot checks npm packages and GitHub Actions on a weekly schedule', async () => {
@@ -58,8 +59,8 @@ test('academic report, algorithm diagrams and viva guide are linked from the REA
     'docs/phase-8/06-deployment-and-final-release.md'
   ]) {
     assert.ok(readme.includes(path), `Missing README link: ${path}`);
-    const content = await readText(`../${path}`);
-    assert.ok(content.length > 1000, `Expected substantive documentation at ${path}`);
+    const document = await readText(`../${path}`);
+    assert.ok(document.length > 1000, `Expected substantive documentation at ${path}`);
   }
 });
 
