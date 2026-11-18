@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.3 — Vite 8 compatibility
+
+- Updated `@vitejs/plugin-react` to 6.3.0 so its Vite peer dependency supports the repository's Vite 8.3.8 installation.
+- Refreshed the committed npm lockfile from the compatible dependency graph.
+- Updated dependency-version regression tests to match the current Vite 8, React plugin 6 and Lucide 1 release lines.
+- Kept the existing UI, routing engine and persisted project contracts unchanged.
+
+
 ## 0.9.2 — Canvas interaction & visual polish
 
 - Added left-drag panning from the empty Network Studio canvas while keeping router dragging in Select mode.

@@ -45,7 +45,7 @@ test('Dependabot checks npm packages and GitHub Actions on a weekly schedule', a
 test('release metadata and lockfile root version remain aligned', async () => {
   const pkg = await readJson('../package.json');
   const lock = await readJson('../package-lock.json');
-  assert.equal(pkg.version, '0.9.2');
+  assert.equal(pkg.version, '0.9.3');
   assert.equal(lock.version, pkg.version);
   assert.equal(lock.packages[''].version, pkg.version);
 });
