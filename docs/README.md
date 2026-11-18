@@ -11,3 +11,5 @@
 - [`phase-8/`](phase-8/) — public homepage, dedicated lab route namespace, collapsible sidebar, release preparation, deployment and academic documentation.
 - [`architecture/`](architecture/) — module boundaries and code organization.
 - [`contracts/`](contracts/) — persisted project and simulation-run schemas.
+
+- [`phase-8/08-canvas-interaction-and-motion.md`](phase-8/08-canvas-interaction-and-motion.md) — wider public layout, level topology preview, canvas panning, minimap removal and reduced-motion-aware animations.

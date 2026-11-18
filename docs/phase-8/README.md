@@ -58,3 +58,6 @@ The follow-up Phase 8 release work adds:
 - [Repository preparation notes](07-repository-preparation.md).
 
 The repository intentionally has no `LICENSE` file yet. The owner must choose the license before the project is represented as open source.
+
+
+- [Canvas interaction and visual polish](08-canvas-interaction-and-motion.md) — larger homepage gutters, level topology preview, canvas panning, minimap removal and reduced-motion-aware animation.

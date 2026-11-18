@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.2 — Canvas interaction & visual polish
+
+- Added left-drag panning from the empty Network Studio canvas while keeping router dragging in Select mode.
+- Removed the React Flow minimap overlay to free up canvas space; zoom and fit controls remain available.
+- Increased the public homepage's centered desktop side gutters and removed the tilt from the topology preview window.
+- Added viewport-based reveal transitions, a subtle animated packet path, router pulse and link-flow motion.
+- Added workspace page entrance and canvas interaction polish with reduced-motion support.
+- Added regression tests for canvas panning, minimap removal, homepage spacing, straight preview geometry and animation accessibility.
+
+
 ## 0.9.1 — Phase 8: Release Preparation
 
 - Added GitHub Actions CI for tests, production build and high-severity dependency audit.

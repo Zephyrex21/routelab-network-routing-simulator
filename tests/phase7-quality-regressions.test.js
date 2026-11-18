@@ -127,6 +127,7 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   assert.match(changelog, /0\.8\.0 — Phase 7/);
   assert.match(changelog, /0\.9\.0 — Phase 8: Public Home/);
   assert.match(changelog, /0\.9\.1 — Phase 8: Release Preparation/);
+  assert.match(changelog, /0\.9\.2 — Canvas interaction & visual polish/);
   assert.match(sidebar, /v0\.9\.1 · Phase 8/);
   assert.match(topbar, /Phase 8 · final release preparation/);
   assert.match(overview, /Phase 8 · final release preparation/);

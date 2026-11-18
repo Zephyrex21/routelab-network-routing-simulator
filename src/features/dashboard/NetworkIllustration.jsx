@@ -16,7 +16,7 @@ export default function NetworkIllustration({ compact = false }) {
       </defs>
       <g className="illustration-links" fill="none" stroke="url(#routeLinePhase1)" strokeWidth="1.8">
         <path d="M92 82 246 48 410 95 338 218 132 218 92 82" />
-        <path d="M92 82 338 218M246 48 132 218M246 48 338 218" strokeDasharray="4 7" opacity=".52" />
+        <path className="illustration-links-secondary" d="M92 82 338 218M246 48 132 218M246 48 338 218" strokeDasharray="4 7" opacity=".52" />
       </g>
       <g className="illustration-link-labels">
         <text x="160" y="47">04</text><text x="331" y="55">03</text><text x="378" y="171">05</text><text x="75" y="160">07</text>
@@ -30,7 +30,7 @@ export default function NetworkIllustration({ compact = false }) {
           <text className="illustration-node-label" x="0" y="39" textAnchor="middle">{node.label}</text>
         </g>
       ))}
-      <g className="illustration-packet" transform="translate(178 117)" filter="url(#routerGlowPhase1)"><circle r="4"/><circle r="10" className="packet-orbit" /></g>
+      <g className="illustration-packet" filter="url(#routerGlowPhase1)"><circle r="4"/><circle r="10" className="packet-orbit" /><animateMotion dur="13s" repeatCount="indefinite" path="M 92 82 L 246 48 L 410 95 L 338 218 L 132 218 L 92 82" /></g>
     </svg>
   );
 }
