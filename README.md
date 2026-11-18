@@ -2,9 +2,9 @@
 
 **An Interactive Web-Based Simulator for Distance Vector and Link State Routing Algorithms**
 
-RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a premium, responsive application shell, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
+RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 7 — QA, Accessibility & Release Hardening.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+> **Current status: Phase 8 — Public Home & Workspace Shell Refinement.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
 
 ## Run locally
 
@@ -12,12 +12,12 @@ RouteLab is an educational Computer Networks project built in controlled phases.
 
 - Node.js 22.12+ recommended (Vite 7 requires Node.js 20.19+ or 22.12+).
 - npm 10+ recommended.
-- The first `npm install` creates `package-lock.json`; retain and commit that file with future source updates to lock transitive dependency versions.
+- `package-lock.json` is committed. Use `npm ci` for clean, reproducible installations and commit an updated lockfile whenever dependencies change.
 
 ### Setup
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -43,12 +43,15 @@ npm run preview
 
 | Path | Screen | Current state |
 |---|---|---|
-| `/` | Overview | Project dashboard and phase status |
-| `/studio` | Network Studio | Interactive Phase 2 topology editor |
-| `/simulation` | Simulation Studio | Interactive Phase 4 playback, event timeline, topology highlighting and routing-table explorer |
-| `/packets` | Packet Explorer | Interactive hop-by-hop forwarding journey for both algorithms |
-| `/failures` | Network Failure Lab | Before/after link status and cost experiments for one selected algorithm |
-| `/compare` | Comparison Lab | Live route, routing-table, metrics and failure-scenario comparison |
+| `/` | Public homepage | Product introduction, feature guide and entry points into the lab |
+| `/lab/overview` | Lab overview | Workspace overview and current project entry point |
+| `/lab/studio` | Network Studio | Interactive Phase 2 topology editor |
+| `/lab/simulation` | Simulation Studio | Interactive Phase 4 playback, event timeline, topology highlighting and routing-table explorer |
+| `/lab/packets` | Packet Explorer | Interactive hop-by-hop forwarding journey for both algorithms |
+| `/lab/failures` | Network Failure Lab | Before/after link status and cost experiments for one selected algorithm |
+| `/lab/compare` | Comparison Lab | Live route, routing-table, metrics and failure-scenario comparison |
+
+The original workspace paths (`/studio`, `/simulation`, `/packets`, `/failures`, `/compare` and `/overview`) redirect to their new `/lab/*` equivalents for bookmark compatibility. The public homepage intentionally renders without the lab sidebar; entering any lab route reveals the workspace shell.
 
 ## Phase 7 quality and security
 
@@ -137,7 +140,7 @@ Projects are stored locally in the current browser under `routelab-project-libra
 
 Phase 0 Foundation → Phase 1 UI Shell → **Phase 2 Topology Builder** → **Phase 3 Routing Engine** → **Phase 4 Simulation Studio** → Phase 5 Packet Explorer & Failure Lab → **Phase 6 Comparison** → **Phase 7 QA & Polish** → Phase 8 Deployment & Academic Documentation.
 
-See [`docs/phase-2/README.md`](docs/phase-2/README.md) for the topology builder, [`docs/phase-3/README.md`](docs/phase-3/README.md) for the routing engine,  [`docs/phase-4/README.md`](docs/phase-4/README.md) for the interactive Simulation Studio, and [`docs/phase-5/README.md`](docs/phase-5/README.md) for packet forwarding and network-change experiments. See [`docs/phase-6/README.md`](docs/phase-6/README.md) for the live comparison laboratory.
+See [`docs/phase-2/README.md`](docs/phase-2/README.md) for the topology builder, [`docs/phase-3/README.md`](docs/phase-3/README.md) for the routing engine,  [`docs/phase-4/README.md`](docs/phase-4/README.md) for the interactive Simulation Studio, and [`docs/phase-5/README.md`](docs/phase-5/README.md) for packet forwarding and network-change experiments. See [`docs/phase-6/README.md`](docs/phase-6/README.md) for the live comparison laboratory and [`docs/phase-8/README.md`](docs/phase-8/README.md) for the public homepage and workspace shell.
 
 
 ## Troubleshooting a blank page

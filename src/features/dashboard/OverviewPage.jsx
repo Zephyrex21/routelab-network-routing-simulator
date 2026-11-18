@@ -36,11 +36,11 @@ export default function OverviewPage() {
       <section className="overview-hero">
         <div className="overview-hero-copy">
           <div className="eyebrow"><span className="eyebrow-mark" /> ROUTELAB / LEARNING LABORATORY</div>
-          <Badge tone="success" dot>Phase 7 · release hardening</Badge>
+          <Badge tone="success" dot>Phase 8 · final release preparation</Badge>
           <h1>Understand the route.<br /><span>Not just the result.</span></h1>
           <p className="overview-lede">A visual learning space for exploring how networks make routing decisions. Build a topology, follow the logic, and see the path come together.</p>
           <div className="overview-hero-actions">
-            <Button icon={Network} iconRight={ArrowRight} onClick={() => navigate('/studio')}>Open Network Studio</Button>
+            <Button icon={Network} iconRight={ArrowRight} onClick={() => navigate('/lab/studio')}>Open Network Studio</Button>
             <a className="text-link" href="#routing-models">Explore routing models <ArrowUpRight size={15} /></a>
           </div>
           <div className="overview-facts" aria-label="Project scope">
@@ -60,8 +60,8 @@ export default function OverviewPage() {
 
       <section className="scope-strip" aria-label="Current project status">
         <div className="scope-status"><span className="scope-status-icon"><CircleDot size={17} /></span><div><strong>Topology editor available</strong><span>Build and save custom network layouts</span></div></div>
-        <div className="scope-next"><span>NEXT MILESTONE</span><strong>Testing & polish</strong><Badge tone="info">Phase 7</Badge></div>
-        <Link to="/simulation" className="scope-arrow" aria-label="Open Simulation Studio"><ArrowRight size={18} /></Link>
+        <div className="scope-next"><span>NEXT MILESTONE</span><strong>Deployment & documentation</strong><Badge tone="info">Phase 8</Badge></div>
+        <Link to="/lab/simulation" className="scope-arrow" aria-label="Open Simulation Studio"><ArrowRight size={18} /></Link>
       </section>
 
       <section className="content-section" id="routing-models">
@@ -132,9 +132,9 @@ export default function OverviewPage() {
         <Card className="next-card">
           <div className="next-card-icon"><BookOpen size={18} /></div>
           <div className="eyebrow muted">UP NEXT · PHASE 7</div>
-          <h3>Polish and validate RouteLab.</h3>
-          <p>The topology builder, routing engines, simulation, packet explorer, failure lab and comparison workspace are implemented. Next, we will run full manual QA, refine responsive behaviour, harden edge cases and prepare the application for deployment.</p>
-          <Link to="/compare" className="next-card-link">Open comparison workspace <ArrowRight size={15} /></Link>
+          <h3>Prepare RouteLab for release.</h3>
+          <p>The topology builder, routing engines, simulation, packet explorer, failure lab and comparison workspace are implemented. The current release pass focuses on the public homepage, a dedicated lab experience, typography consistency and final deployment preparation.</p>
+          <Link to="/lab/compare" className="next-card-link">Open comparison workspace <ArrowRight size={15} /></Link>
         </Card>
       </section>
     </div>

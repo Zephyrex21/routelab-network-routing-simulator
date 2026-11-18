@@ -1,11 +1,13 @@
 # RouteLab documentation
 
-- [`phase-0/`](phase-0/) — charter, requirements, user flows, design system, technical architecture, algorithm specification, validation plan and project decisions.
-- [`phase-1/`](phase-1/) — application shell implementation, screen map, component inventory and manual QA.
-- [`phase-2/`](phase-2/) — interactive topology builder implementation, data/persistence behaviour, presets, manual QA and phase sign-off.
-- [`phase-3/`](phase-3/) — routing algorithms, run events, metrics, snapshots, automated QA and phase sign-off.
-- [`phase-4/`](phase-4/) — Simulation Studio implementation, playback semantics, QA and sign-off.
-- [`phase-5/`](phase-5/) — packet forwarding, topology failure experiments, QA and sign-off.
-- [`phase-6/`](phase-6/) — live cross-algorithm route/table comparison, separated work metrics, failure sensitivity analysis, QA and sign-off.
-- [`contracts/`](contracts/) — versioned JSON contracts and example network project.
-- [`architecture/`](architecture/) — architectural boundaries and dependency rules.
+- [`phase-0/`](phase-0/) — product charter, requirements, user flows, design system, architecture and algorithm specification.
+- [`phase-1/`](phase-1/) — UI foundation and application shell.
+- [`phase-2/`](phase-2/) — interactive topology builder.
+- [`phase-3/`](phase-3/) — Distance Vector and Link State routing engine.
+- [`phase-4/`](phase-4/) — event-driven Simulation Studio.
+- [`phase-5/`](phase-5/) — packet forwarding and network failure experiments.
+- [`phase-6/`](phase-6/) — routing algorithm comparison and analytics.
+- [`phase-7/`](phase-7/) — QA, accessibility, dependency review and release hardening.
+- [`phase-8/`](phase-8/) — public homepage, dedicated lab route namespace, collapsible sidebar and typography refinement.
+- [`architecture/`](architecture/) — module boundaries and code organization.
+- [`contracts/`](contracts/) — persisted project and simulation-run schemas.

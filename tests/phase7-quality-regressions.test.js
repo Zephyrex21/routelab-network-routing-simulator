@@ -117,17 +117,18 @@ test('project import remains bounded to 1 MB and validates data before accepting
   assert.match(source, /const validation = validateProject\(parsed\)/);
 });
 
-test('release version and Phase 7 status are consistent across project metadata and UI', async () => {
+test('Phase 7 hardening remains recorded and current Phase 8 release metadata is consistent', async () => {
   const pkg = await readJson('../package.json');
   const changelog = await readText('../CHANGELOG.md');
   const sidebar = await readText('../src/components/layout/Sidebar.jsx');
   const topbar = await readText('../src/components/layout/Topbar.jsx');
   const overview = await readText('../src/features/dashboard/OverviewPage.jsx');
-  assert.equal(pkg.version, '0.8.0');
+  assert.equal(pkg.version, '0.9.0');
   assert.match(changelog, /0\.8\.0 — Phase 7/);
-  assert.match(sidebar, /v0\.8\.0 · Phase 7/);
-  assert.match(topbar, /Phase 7 · release hardening/);
-  assert.match(overview, /Phase 7 · release hardening/);
+  assert.match(changelog, /0\.9\.0 — Phase 8/);
+  assert.match(sidebar, /v0\.9\.0 · Phase 8/);
+  assert.match(topbar, /Phase 8 · final release preparation/);
+  assert.match(overview, /Phase 8 · final release preparation/);
 });
 
 test('IconButton defaults to a non-submitting button type', async () => {
