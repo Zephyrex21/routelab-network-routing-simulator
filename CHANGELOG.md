@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.0 — Phase 8: Public Home & Workspace Shell Refinement
+
+- Added a public-facing RouteLab homepage at `/` with product introduction, feature pathways, routing model overview and clear entry points into the lab.
+- Moved the interactive application into the `/lab/*` route namespace so visitors no longer see workspace navigation until they enter the lab.
+- Added redirects from the original `/studio`, `/simulation`, `/packets`, `/failures`, `/compare` and `/overview` paths to their new `/lab/*` equivalents.
+- Added a persistent, collapsible desktop sidebar with a compact icon-rail mode, accessible labels/tooltips and an expanded mobile drawer.
+- Refined the lab topbar with sidebar controls, breadcrumbs and a direct link back to the public homepage.
+- Introduced a consistent typography scale and raised small labels, navigation, controls, helper copy and section descriptions to improve readability and hierarchy.
+- Added responsive public-home layouts and reduced-motion handling.
+- Added Phase 8 route, sidebar, typography and public-home regression tests and implementation notes.
+
+
 ## 0.8.0 — Phase 7: QA, Accessibility & Release Hardening
 
 - Secured Vite development and preview defaults to loopback-only access (`127.0.0.1`) with an explicit local host allowlist and strict filesystem serving.

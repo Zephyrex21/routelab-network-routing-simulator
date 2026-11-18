@@ -1,35 +1,57 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { HelpCircle, Menu, Moon, Sun } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { HelpCircle, Menu, Moon, Sun, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import IconButton from '../ui/IconButton.jsx';
 import Dialog from '../ui/Dialog.jsx';
 import Button from '../ui/Button.jsx';
 import { useTheme } from '../../app/ThemeProvider.jsx';
 
 const titles = {
-  '/': { section: 'Workspace', title: 'Overview' },
-  '/studio': { section: 'Workspace', title: 'Network Studio' },
-  '/simulation': { section: 'Workspace', title: 'Simulation' },
-  '/packets': { section: 'Workspace', title: 'Packet Explorer' },
-  '/failures': { section: 'Workspace', title: 'Network Failure Lab' },
-  '/compare': { section: 'Workspace', title: 'Compare algorithms' },
+  '/lab/overview': { section: 'Lab', title: 'Overview' },
+  '/lab/studio': { section: 'Lab', title: 'Network Studio' },
+  '/lab/simulation': { section: 'Lab', title: 'Simulation Studio' },
+  '/lab/packets': { section: 'Lab', title: 'Packet Explorer' },
+  '/lab/failures': { section: 'Lab', title: 'Network Failure Lab' },
+  '/lab/compare': { section: 'Lab', title: 'Compare algorithms' },
 };
 
-export default function Topbar({ onMenuClick, isMobileMenuOpen }) {
+export default function Topbar({ onMenuClick, isMobileMenuOpen, sidebarCollapsed, onToggleSidebar }) {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const [helpOpen, setHelpOpen] = useState(false);
-  const current = titles[location.pathname] || titles['/'];
+  const current = titles[location.pathname] || titles['/lab/overview'];
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
+  const SidebarIcon = sidebarCollapsed ? PanelLeftOpen : PanelLeftClose;
 
   return (
     <>
       <header className="topbar">
         <div className="topbar-leading">
-          <IconButton icon={Menu} label="Open navigation" className="mobile-menu-button" aria-expanded={isMobileMenuOpen} aria-controls="routelab-sidebar" onClick={onMenuClick} />
-          <nav className="breadcrumbs" aria-label="Breadcrumb"><span>{current.section}</span><span className="breadcrumb-divider" aria-hidden="true">/</span><strong aria-current="page">{current.title}</strong></nav>
+          <IconButton
+            icon={SidebarIcon}
+            label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="desktop-sidebar-toggle"
+            aria-pressed={!sidebarCollapsed}
+            onClick={onToggleSidebar}
+          />
+          <IconButton
+            icon={Menu}
+            label="Open navigation"
+            className="mobile-menu-button"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="routelab-sidebar"
+            onClick={onMenuClick}
+          />
+          <nav className="breadcrumbs" aria-label="Breadcrumb">
+            <Link to="/">RouteLab</Link>
+            <span className="breadcrumb-divider" aria-hidden="true">/</span>
+            <span>{current.section}</span>
+            <span className="breadcrumb-divider" aria-hidden="true">/</span>
+            <strong aria-current="page">{current.title}</strong>
+          </nav>
         </div>
         <div className="topbar-actions">
+          <Link to="/" className="topbar-home-link">Home</Link>
           <div className="topbar-project-label"><span className="project-indicator" /> Local workspace</div>
           <span className="topbar-divider" />
           <IconButton icon={HelpCircle} label="About RouteLab" onClick={() => setHelpOpen(true)} />
@@ -45,8 +67,8 @@ export default function Topbar({ onMenuClick, isMobileMenuOpen }) {
         description="An educational laboratory for making network routing easier to understand."
       >
         <div className="about-dialog-content">
-          <div className="about-mark"><span className="project-indicator" /> Phase 7 · release hardening</div>
-          <p>RouteLab is being built in phases. The current release includes an interactive topology editor, local project saving, deterministic Distance Vector and Link State engines, event-driven simulation playback, hop-by-hop packet forwarding and controlled before/after network experiments, and cross-algorithm comparison with clearly separated work metrics. The current development pass focuses on accessibility, reliability, security and release readiness.</p>
+          <div className="about-mark"><span className="project-indicator" /> Phase 8 · final release preparation</div>
+          <p>RouteLab combines an interactive topology editor, deterministic Distance Vector and Link State engines, event-driven simulation playback, validated hop-by-hop packet forwarding, controlled network-change experiments and cross-algorithm comparison. This workspace is the hands-on lab; the public home page introduces the project and its learning workflow.</p>
           <div className="about-dialog-foot"><span>Computer Networks mini project</span><Button size="sm" onClick={() => setHelpOpen(false)}>Got it</Button></div>
         </div>
       </Dialog>
