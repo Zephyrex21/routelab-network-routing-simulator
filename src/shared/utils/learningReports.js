@@ -1,4 +1,4 @@
-import { getEventExplanation, getEventLabel } from '../features/simulation/model/simulationViewModel.js';
+import { getEventExplanation, getEventLabel } from '../../features/simulation/model/simulationViewModel.js';
 
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
