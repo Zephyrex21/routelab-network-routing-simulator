@@ -185,3 +185,111 @@
   .simulation-page .simulation-learning-note { padding: 11px 12px; }
   .simulation-page .simulation-learning-note > p { font-size: 10px; }
 }
+
+
+/* Phase 10.2 — prediction practice panel */
+.simulation-page .simulation-practice-entry,
+.simulation-page .simulation-practice-panel {
+  margin-top: 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.simulation-page .simulation-practice-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 18px;
+  box-shadow: var(--shadow-soft);
+}
+.simulation-page .simulation-practice-entry > div { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.simulation-page .simulation-practice-entry strong { color: var(--text); font-size: 13px; }
+.simulation-page .simulation-practice-entry p { margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.55; }
+.simulation-page .simulation-practice-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 19px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-soft);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.simulation-page .simulation-practice-heading h2 { margin: 5px 0; color: var(--text); font-size: 17px; letter-spacing: -.025em; }
+.simulation-page .simulation-practice-heading p { max-width: 680px; margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.6; }
+.simulation-page .simulation-practice-content { display: flex; flex-direction: column; gap: 14px; padding: 17px 19px 19px; }
+.simulation-page .simulation-practice-prompt { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 11px; }
+.simulation-page .simulation-practice-prompt > span:last-child { color: var(--text-tertiary); font-family: var(--font-mono); font-size: 10px; }
+.simulation-page .simulation-practice-prompt h3 { width: 100%; margin: 1px 0 0; color: var(--text); font-size: 14px; font-weight: 670; line-height: 1.55; }
+.simulation-page .simulation-practice-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.simulation-page .simulation-practice-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  color: var(--text-secondary);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) ease, background var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+}
+.simulation-page .simulation-practice-option:hover:not(:disabled) { border-color: var(--line-strong); background: var(--surface-soft); }
+.simulation-page .simulation-practice-option.is-selected { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); color: var(--text); }
+.simulation-page .simulation-practice-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.simulation-page .simulation-practice-option:disabled { cursor: default; opacity: 1; }
+.simulation-page .simulation-practice-option > span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  color: var(--text-secondary);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+.simulation-page .simulation-practice-option b { font-size: 11px; font-weight: 570; line-height: 1.55; }
+.simulation-page .simulation-practice-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.simulation-page .simulation-practice-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+.simulation-page .simulation-practice-feedback.is-correct { border-left: 3px solid var(--success); }
+.simulation-page .simulation-practice-feedback.is-incorrect { border-left: 3px solid var(--warning); }
+.simulation-page .simulation-practice-feedback strong { color: var(--text); font-size: 12px; }
+.simulation-page .simulation-practice-feedback p { margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.6; }
+.simulation-page .simulation-practice-feedback > div { display: flex; flex-wrap: wrap; gap: 5px 9px; padding-top: 7px; border-top: 1px solid var(--line); font-size: 10px; line-height: 1.55; }
+.simulation-page .simulation-practice-feedback > div b { color: var(--accent); white-space: nowrap; }
+.simulation-page .simulation-practice-feedback > div span { color: var(--text-secondary); }
+.simulation-page .simulation-practice-complete { display: flex; align-items: flex-start; gap: 12px; padding: 18px 20px; color: var(--accent); }
+.simulation-page .simulation-practice-complete > div { display: flex; flex-direction: column; gap: 4px; }
+.simulation-page .simulation-practice-complete strong { color: var(--text); font-size: 12px; }
+.simulation-page .simulation-practice-complete p { margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.55; }
+@media (max-width: 760px) {
+  .simulation-page .simulation-practice-options { grid-template-columns: 1fr; }
+  .simulation-page .simulation-practice-option { min-height: 58px; }
+  .simulation-page .simulation-practice-entry { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 460px) {
+  .simulation-page .simulation-practice-heading { gap: 8px; padding: 14px; }
+  .simulation-page .simulation-practice-heading h2 { font-size: 15px; }
+  .simulation-page .simulation-practice-content { gap: 11px; padding: 14px; }
+  .simulation-page .simulation-practice-prompt h3 { font-size: 13px; }
+  .simulation-page .simulation-practice-option { padding: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .simulation-page .simulation-practice-option { transition: none; }
+}

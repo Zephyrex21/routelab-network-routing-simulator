@@ -9,6 +9,7 @@ import {
   getCurrentSnapshotLabel,
   getDistanceVectorTable,
   getEventExplanation,
+  getNextLearningChallenge,
   getEventFacts,
   getEventLabel,
   getLinkStateTableAt,
@@ -234,4 +235,49 @@ test('guided explanations teach Link State flooding, Dijkstra settling and relax
 test('guided explanation has a useful pre-run state and safe fallback for unknown events', () => {
   assert.match(getEventExplanation(null).explanation, /Run Distance Vector or Link State/);
   assert.match(getEventExplanation({ type: 'custom.event', message: 'A custom step' }).explanation, /A custom step/);
+});
+
+
+test('Distance Vector practice creates a hidden next-step challenge for neighbour advertisements', () => {
+  const run = runDistanceVector(project);
+  const firstAdvertisement = run.events.find((event) => event.type === 'distance-vector.vector.sent');
+  const challenge = getNextLearningChallenge(run, firstAdvertisement.sequence - 1);
+  assert.equal(challenge.eventSequence, firstAdvertisement.sequence);
+  assert.match(challenge.question, /gets a distance vector/);
+  assert.equal(challenge.correctOptionId, 'compare-via-neighbour');
+  assert.equal(challenge.choices.length, 3);
+});
+
+test('Distance Vector practice predicts route-cost updates and convergence decisions', () => {
+  const run = runDistanceVector(project);
+  const update = run.events.find((event) => event.type === 'distance-vector.route.updated');
+  const updateChallenge = getNextLearningChallenge(run, update.sequence - 1);
+  assert.ok(['accept-lower-cost', 'prefer-next-hop'].includes(updateChallenge.correctOptionId));
+
+  const stableRound = run.events.find((event) => event.type === 'distance-vector.round.completed' && event.details.stable);
+  const stableChallenge = getNextLearningChallenge(run, stableRound.sequence - 1);
+  assert.equal(stableChallenge.correctOptionId, 'stop');
+});
+
+test('Link State practice predicts Dijkstra settling, relaxation and duplicate suppression', () => {
+  const run = runLinkState(project);
+  const settled = run.events.find((event) => event.type === 'link-state.dijkstra.vertex.settled');
+  const settledChallenge = getNextLearningChallenge(run, settled.sequence - 1);
+  assert.equal(settledChallenge.correctOptionId, 'final-distance');
+
+  const relaxation = run.events.find((event) => event.type === 'link-state.dijkstra.relaxation.updated');
+  const relaxationChallenge = getNextLearningChallenge(run, relaxation.sequence - 1);
+  assert.equal(relaxationChallenge.correctOptionId, 'update');
+
+  const duplicate = run.events.find((event) => event.type === 'link-state.lsa.duplicate-suppressed');
+  const duplicateChallenge = getNextLearningChallenge(run, duplicate.sequence - 1);
+  assert.equal(duplicateChallenge.correctOptionId, 'discard-duplicate');
+});
+
+test('practice challenge skips non-decision events and returns null after the final checkpoint', () => {
+  const run = runDistanceVector(project);
+  const first = getNextLearningChallenge(run, -1);
+  assert.ok(first);
+  assert.equal(getNextLearningChallenge(run, run.events.at(-1).sequence), null);
+  assert.equal(getNextLearningChallenge(null, -1), null);
 });

@@ -128,6 +128,14 @@ try {
   await page.getByRole('button', { name: 'Run simulation' }).click();
   await page.getByRole('heading', { name: 'Event timeline' }).waitFor({ state: 'visible', timeout: 15000 });
   assert.ok(await page.locator('.simulation-event-row').count() > 0, 'Simulation Studio should render run events');
+  await page.getByRole('button', { name: 'Start practice' }).click();
+  await page.getByRole('heading', { name: 'Predict the next decision' }).waitFor({ state: 'visible' });
+  assert.equal(await page.locator('.simulation-practice-option').count(), 3, 'Practice mode should offer three answer options');
+  await page.locator('.simulation-practice-option').first().click();
+  await page.getByRole('button', { name: 'Check answer' }).click();
+  await page.locator('.simulation-practice-feedback[role="status"]').waitFor({ state: 'visible' });
+  await page.getByRole('button', { name: 'Reveal step & continue' }).click();
+  passed.push('Simulation Studio prediction practice and answer feedback');
   passed.push('Simulation Studio run and event timeline');
 
   await page.goto(`${baseUrl}/lab/packets`, { waitUntil: 'domcontentloaded' });

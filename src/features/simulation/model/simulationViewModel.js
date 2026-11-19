@@ -162,6 +162,189 @@ export function getEventExplanation(event) {
   }
 }
 
+
+/**
+ * Build a prediction exercise from the next unseen, decision-bearing event.
+ * The target event is withheld from the learner until they submit an answer.
+ */
+export function getNextLearningChallenge(run, eventSequence = -1) {
+  if (!run || !Array.isArray(run.events)) return null;
+
+  const formatCost = (value) => value === null || value === undefined ? '∞' : String(value);
+  const makeChallenge = (event, question, choices, correctOptionId, explanation, takeaway) => ({
+    eventSequence: event.sequence,
+    question,
+    choices,
+    correctOptionId,
+    explanation,
+    takeaway,
+  });
+
+  for (const event of run.events) {
+    if (!Number.isInteger(event.sequence) || event.sequence <= eventSequence) continue;
+    const details = event.details || {};
+
+    switch (event.type) {
+      case 'distance-vector.vector.sent':
+        return makeChallenge(
+          event,
+          `${details.toRouterId || 'The receiving router'} gets a distance vector from ${details.fromRouterId || 'a neighbour'}. How should it use that information?`,
+          [
+            { id: 'replace-all', label: 'Copy the neighbour’s entire table and replace its own routes.' },
+            { id: 'compare-via-neighbour', label: 'Add the link cost to the neighbour’s advertised costs, then compare candidate routes.' },
+            { id: 'ignore-remote', label: 'Ignore destinations that are not directly connected.' },
+          ],
+          'compare-via-neighbour',
+          'Distance Vector uses the neighbour’s advertised distance plus the cost of the link to that neighbour. The receiver compares this candidate with its existing route and keeps the preferred entry.',
+          'A neighbour’s vector is a set of candidate paths, not a replacement for the receiver’s own routing table.',
+        );
+      case 'distance-vector.route.updated': {
+        const previousCost = details.previous?.cost;
+        const nextCost = details.current?.cost;
+        const isTieBreak = previousCost !== null && previousCost !== undefined
+          && nextCost !== null && nextCost !== undefined
+          && Number(previousCost) === Number(nextCost);
+        const correctOptionId = isTieBreak ? 'prefer-next-hop' : 'accept-lower-cost';
+        return makeChallenge(
+          event,
+          `${details.routerId || event.actorRouterId || 'The router'} has a new candidate for ${details.destinationRouterId || 'a destination'}: cost ${formatCost(nextCost)} instead of ${formatCost(previousCost)}. What should happen?`,
+          [
+            { id: 'keep-old', label: 'Always keep the previous route once it has been learned.' },
+            { id: 'accept-lower-cost', label: 'Replace the old route because the new candidate has a lower cost.' },
+            { id: 'prefer-next-hop', label: 'Keep the same total cost but apply the deterministic next-hop tie-break.' },
+          ],
+          correctOptionId,
+          isTieBreak
+            ? 'The total cost is unchanged, but the model applies its deterministic tie-break to choose a preferred next hop. The route changes without claiming a lower total cost.'
+            : 'The new candidate has a lower total cost than the previous entry, so the router records the improved route and its next hop.',
+          'Distance Vector compares candidate costs first; deterministic tie-breaking keeps equal-cost results reproducible.',
+        );
+      }
+      case 'distance-vector.round.completed':
+        return makeChallenge(
+          event,
+          `Round ${details.round ?? ''} has finished. ${details.changedEntryCount ?? 0} routing entries changed. What should the algorithm do next?`.trim(),
+          [
+            { id: 'stop', label: 'Stop: the tables are stable and another round cannot improve them.' },
+            { id: 'continue', label: 'Continue: another round is needed to propagate the changes.' },
+            { id: 'clear', label: 'Clear all learned routes and restart from direct neighbours.' },
+          ],
+          details.stable ? 'stop' : 'continue',
+          details.stable
+            ? 'No routing entries changed in this round, so the stability check confirms convergence.'
+            : 'At least one entry changed. Another synchronous round allows the new information to propagate to other routers.',
+          'Distance Vector converges after a complete round produces no routing-table changes.',
+        );
+      case 'distance-vector.converged':
+        return makeChallenge(
+          event,
+          'What does convergence mean in this Distance Vector run?',
+          [
+            { id: 'one-router', label: 'The first router has finished calculating its own table.' },
+            { id: 'stable-tables', label: 'All routers have stable tables and another update round produces no changes.' },
+            { id: 'direct-only', label: 'Every router can reach only its directly connected neighbours.' },
+          ],
+          'stable-tables',
+          'Convergence means the distributed update process has stabilised. Every router’s table is stable for the current topology.',
+          'Convergence is a network-wide stability condition, not simply the completion of one router’s work.',
+        );
+      case 'link-state.lsa.duplicate-suppressed':
+        return makeChallenge(
+          event,
+          'A router receives an LSA sequence it has already processed. What is the correct response?',
+          [
+            { id: 'forward-again', label: 'Forward it to every neighbour again.' },
+            { id: 'discard-duplicate', label: 'Suppress the duplicate instead of processing and flooding it again.' },
+            { id: 'delete-database', label: 'Delete its link-state database and request a full restart.' },
+          ],
+          'discard-duplicate',
+          'The receiver recognises that this LSA sequence has already been seen. Suppressing it prevents duplicate copies from being repeatedly flooded.',
+          'Sequence-aware duplicate suppression keeps LSA flooding bounded.',
+        );
+      case 'link-state.flooding.completed':
+        return makeChallenge(
+          event,
+          'The LSAs have finished flooding through the reachable network. What is the next major calculation?',
+          [
+            { id: 'exchange-vectors', label: 'Start synchronous distance-vector table exchanges.' },
+            { id: 'run-dijkstra', label: 'Build each router’s shortest-path tree with Dijkstra.' },
+            { id: 'stop', label: 'Stop: flooding itself has calculated every forwarding route.' },
+          ],
+          'run-dijkstra',
+          'Flooding distributes topology information. Each router then uses its local link-state database to run Dijkstra and calculate shortest paths.',
+          'LSA flooding builds topology knowledge; Dijkstra turns that knowledge into routes.',
+        );
+      case 'link-state.dijkstra.started':
+        return makeChallenge(
+          event,
+          `Dijkstra starts at source ${details.sourceRouterId || 'router S'}. Which distance should be known initially?`,
+          [
+            { id: 'source-zero', label: 'The source has distance 0; other routers begin with unknown (infinite) estimates.' },
+            { id: 'all-one', label: 'Every router starts with distance 1 from the source.' },
+            { id: 'all-final', label: 'Every router’s final shortest-path distance is already known.' },
+          ],
+          'source-zero',
+          'Dijkstra initialises the source distance to zero. Other vertices start at infinity until a path to them is discovered.',
+          'The algorithm grows shortest paths outward from one source using tentative distance estimates.',
+        );
+      case 'link-state.dijkstra.vertex.settled':
+        return makeChallenge(
+          event,
+          `${details.routerId || 'A router'} is selected with tentative cost ${formatCost(details.cost)}. What does settling it mean?`,
+          [
+            { id: 'final-distance', label: 'Its shortest distance from the source is now final.' },
+            { id: 'temporary-only', label: 'Its cost is only a guess and must always be increased later.' },
+            { id: 'remove-router', label: 'The router is removed from the topology.' },
+          ],
+          'final-distance',
+          'With non-negative link costs, Dijkstra can safely finalise the unsettled vertex with the smallest tentative distance.',
+          'A settled distance is final for that source; later relaxations do not change it.',
+        );
+      case 'link-state.dijkstra.relaxation.updated': {
+        const previousCost = details.previousCost;
+        const candidateCost = details.candidateCost;
+        const tieBreak = Boolean(details.tieBreak);
+        return makeChallenge(
+          event,
+          tieBreak
+            ? `Two paths to ${details.toRouterId || 'a router'} have the same total cost. What does the deterministic tie-break change?`
+            : `A path through ${details.fromRouterId || 'the current router'} reaches ${details.toRouterId || 'a neighbour'} with cost ${formatCost(candidateCost)}, versus the previous estimate ${formatCost(previousCost)}. What should Dijkstra do?`,
+          [
+            { id: 'keep-old', label: 'Keep the old route regardless of the candidate.' },
+            { id: 'update', label: tieBreak ? 'Keep the equal total cost but select the preferred first hop/predecessor.' : 'Update the tentative distance and record the new best path.' },
+            { id: 'settle-now', label: 'Settle the destination immediately, even if another vertex is closer.' },
+          ],
+          'update',
+          tieBreak
+            ? 'The numeric distance is equal, but the deterministic tie-break selects a reproducible first hop or predecessor.'
+            : 'Relaxation compares the current estimate with distance(source, current) + link cost(current, neighbour). A lower candidate replaces the existing estimate.',
+          'Relaxation updates tentative paths; settling is a separate step performed when the smallest estimate is selected.',
+        );
+      }
+      case 'link-state.dijkstra.relaxation.checked':
+        return makeChallenge(
+          event,
+          details.reason === 'already-settled'
+            ? `The edge ${details.fromRouterId || 'u'} → ${details.toRouterId || 'v'} points to an already settled router. What should happen?`
+            : `A candidate cost of ${formatCost(details.candidateCost)} is checked against the current estimate ${formatCost(details.currentCost)}. What should Dijkstra do when the candidate is not better?`,
+          [
+            { id: 'force-update', label: 'Always replace the current route with the newly examined edge.' },
+            { id: 'keep-or-skip', label: details.reason === 'already-settled' ? 'Skip it: a settled destination is already final.' : 'Keep the existing estimate because the candidate is not better.' },
+            { id: 'restart', label: 'Restart Dijkstra from the same source.' },
+          ],
+          'keep-or-skip',
+          details.reason === 'already-settled'
+            ? 'The destination has already been settled, so its shortest distance is final and this edge is skipped.'
+            : 'The candidate does not improve the stored estimate, so the existing best-known distance remains unchanged.',
+          'Dijkstra examines edges, but only a better valid candidate changes a tentative route.',
+        );
+      default:
+        break;
+    }
+  }
+  return null;
+}
+
 export function getEventFacts(event) {
   if (!event) return [];
   const details = event.details || {};

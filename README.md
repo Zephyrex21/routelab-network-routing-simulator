@@ -10,7 +10,7 @@ RouteLab is an educational Computer Networks project built in controlled phases.
 
 ## Learning experience
 
-Simulation Studio includes guided, event-by-event explanations for Distance Vector and Link State. Step through the timeline to understand neighbour advertisements, route updates, LSA flooding, Dijkstra relaxation and convergence without changing the underlying routing engine.
+Simulation Studio includes guided, event-by-event explanations and an interactive practice mode for Distance Vector and Link State. Predict the next unseen algorithm decision, submit an answer, review the reasoning and key takeaway, then reveal the recorded event. Practice challenges use the existing simulation event stream without changing the routing engine.
 
 ## Live demo
 
