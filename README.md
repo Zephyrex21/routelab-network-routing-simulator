@@ -6,7 +6,11 @@
 
 RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 9.1 — Design System Foundation.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+> **Current status: Phase 9.1 — Design System Foundation (v0.9.6).** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+
+## Live demo
+
+Try RouteLab in your browser: [routelab-network-routing-simulator.vercel.app](https://routelab-network-routing-simulator.vercel.app/).
 
 ## Run locally
 
@@ -39,7 +43,7 @@ npm run audit
 npm run preview
 ```
 
-`npm test` runs the topology-model, UI regression, routing-engine, simulation view-model/controller, packet-forwarding, failure-experiment and cross-algorithm comparison tests using Node's built-in test runner. `npm run test:engine` runs only the routing-engine suite; `npm run test:simulation` runs only the Phase 4 simulation suite; `npm run test:packet` and `npm run test:failure` run the Phase 5 feature suites; `npm run test:comparison` runs the Phase 6 comparison suite. `npm run audit` runs the high-severity npm audit gate after dependency installation. `npm run check` runs all tests and the Vite production build; `npm run check:release` runs tests, build and the npm audit gate in one command.
+`npm test` runs the topology-model, UI regression, routing-engine, simulation view-model/controller, packet-forwarding, failure-experiment and cross-algorithm comparison tests using Node's built-in test runner, including Vite SSR workspace-render regressions for missing active-project selections. `npm run test:engine` runs only the routing-engine suite; `npm run test:simulation` runs only the Phase 4 simulation suite; `npm run test:packet` and `npm run test:failure` run the Phase 5 feature suites; `npm run test:comparison` runs the Phase 6 comparison suite. `npm run audit` runs the high-severity npm audit gate after dependency installation. `npm run check` runs all tests and the Vite production build; `npm run check:release` runs tests, build and the npm audit gate in one command.
 
 ## Application routes
 
@@ -75,12 +79,12 @@ Complete the report's identity fields, insert screenshots from the actual applic
 ## Phase 7 quality and security
 
 - Vite dev and preview servers bind to `127.0.0.1` only; do not expose the Vite dev server to a LAN or public network.
-- Vite is pinned to `7.3.8`, which includes the fix for GHSA-p4f5-76q4-ffq7.
+- Vite is pinned to `8.3.8`, beyond the affected Vite 7 range in GHSA-p4f5-76q4-ffq7.
 - Recharts was removed because the project does not import it; comparison bars use CSS.
 - Dialogs and the mobile navigation drawer lock background interaction, manage keyboard focus and restore focus after closing.
 - Inputs have programmatically associated labels, hints and errors; small tertiary text colours meet 4.5:1 contrast against their primary page/surface backgrounds.
 - The stylesheet honours `prefers-reduced-motion`; the app is designed for responsive widths down to 320px.
-- `npm audit` must be run after install. Previous npm output reported high-severity vulnerabilities but did not include advisory details in the shared terminal excerpt; the current transitive audit therefore remains a local release gate.
+- CI runs `npm audit --audit-level=high` against the locked dependency tree. The latest successful run on the reviewed `main` commit (`3db9744`) passed this gate; rerun it after dependency changes.
 
 ## Phase 6 algorithm comparison
 
@@ -167,4 +171,4 @@ See [`docs/phase-2/README.md`](docs/phase-2/README.md) for the topology builder,
 
 If Vite reports that the development server is ready but the browser shows an empty page, open the browser developer tools (F12) and inspect the Console. A successful `npm run dev` only confirms that the Vite server started; it does not guarantee that React mounted successfully.
 
-This release fixes the Phase 2 blank-screen regression caused by missing `Boxes` and `Route` icon imports in `OverviewPage.jsx`. After extracting this updated archive, run `npm install` once and then `npm run dev`. If an older dev server is still running, stop it with Ctrl+C before starting the updated project.
+The application includes a visible boot fallback for module-loading or React-mount failures. After pulling the latest changes, run `npm ci` to install the committed dependency lockfile, then `npm run dev`. If an older dev server is running, stop it with Ctrl+C before restarting.
