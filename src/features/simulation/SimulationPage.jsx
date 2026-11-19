@@ -429,7 +429,8 @@ export default function SimulationPage() {
   }, [refreshExperimentHistory]);
 
   useEffect(() => {
-    const syncProject = () => {
+    const syncProject = (event) => {
+      if (event?.type === 'storage' && event.key && event.key !== 'routelab-project-library-v1') return;
       const nextProject = getActiveProject();
       setHistoryReplayId(null);
       if (!nextProject) {
@@ -500,7 +501,6 @@ export default function SimulationPage() {
   const handleAlgorithmChange = (nextAlgorithm) => {
     if (nextAlgorithm === algorithm) return;
     setAlgorithm(nextAlgorithm);
-    setHistoryReplayId(null);
     setIsPracticeMode(false);
     setRun(null);
     setCursor(-1);

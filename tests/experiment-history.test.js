@@ -46,7 +46,7 @@ test('successful runs save compact experiment records with isolated topology sna
     assert.equal(Object.hasOwn(raw.experiments[0], 'events'), false);
     assert.equal(Object.hasOwn(raw.experiments[0], 'finalTables'), false);
     project.routers[0].label = 'Changed after save';
-    assert.equal(getExperimentHistory()[0].projectSnapshot.routers[0].label, 'R1');
+    assert.equal(getExperimentHistory()[0].projectSnapshot.routers[0].label, 'R1 · North');
   } finally { storage.restore(); }
 });
 
