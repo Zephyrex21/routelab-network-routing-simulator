@@ -45,7 +45,7 @@ test('Phase 9.3 simulation workspace styling loads after the existing design fou
 
 test('Phase 9.3 simulation styles are scoped and responsive, with reduced-motion support', async () => {
   const styles = await readText('../src/styles/phase9-simulation-studio.css');
-  for (const snippet of ['.simulation-page', '@media (max-width: 1100px)', '@media (max-width: 760px)', '@media (max-width: 460px)', 'prefers-reduced-motion: reduce']) {
+  for (const snippet of ['.simulation-page', '@media (max-width: 1180px)', '@media (max-width: 760px)', '@media (max-width: 460px)', 'prefers-reduced-motion: reduce']) {
     assert.ok(styles.includes(snippet), `Missing simulation responsive rule: ${snippet}`);
   }
 });
