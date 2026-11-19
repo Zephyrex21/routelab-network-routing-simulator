@@ -293,3 +293,33 @@
 @media (prefers-reduced-motion: reduce) {
   .simulation-page .simulation-practice-option { transition: none; }
 }
+
+
+/* Phase 10.3 — compact, independently persisted experiment history */
+.simulation-page .simulation-history-panel { min-width: 0; margin-top: 16px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+.simulation-page .simulation-history-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+.simulation-page .simulation-history-heading h2 { display: flex; align-items: center; gap: 9px; margin: 4px 0; color: var(--text); font-size: 15px; letter-spacing: -.02em; }
+.simulation-page .simulation-history-heading p { max-width: 670px; margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.55; }
+.simulation-page .simulation-history-list { display: flex; flex-direction: column; }
+.simulation-page .simulation-history-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; min-width: 0; padding: 13px 17px; border-bottom: 1px solid var(--line); }
+.simulation-page .simulation-history-row:last-child { border-bottom: 0; }
+.simulation-page .simulation-history-main { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.simulation-page .simulation-history-title { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 10px; }
+.simulation-page .simulation-history-title > strong { color: var(--text); font-size: 12px; font-weight: 680; }
+.simulation-page .simulation-history-meta, .simulation-page .simulation-history-main > small { color: var(--text-tertiary); font-size: 10px; line-height: 1.5; }
+.simulation-page .simulation-history-main > small { color: var(--text-secondary); }
+.simulation-page .simulation-history-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 6px; }
+.simulation-page .simulation-history-empty { display: flex; align-items: flex-start; gap: 12px; padding: 18px; color: var(--accent); }
+.simulation-page .simulation-history-empty > div { display: flex; flex-direction: column; gap: 4px; }
+.simulation-page .simulation-history-empty strong { color: var(--text); font-size: 12px; }
+.simulation-page .simulation-history-empty p { margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.6; }
+@media (max-width: 760px) {
+  .simulation-page .simulation-history-row { align-items: flex-start; flex-direction: column; gap: 9px; }
+  .simulation-page .simulation-history-actions { width: 100%; }
+}
+@media (max-width: 460px) {
+  .simulation-page .simulation-history-heading { gap: 8px; padding: 13px; }
+  .simulation-page .simulation-history-heading h2 { flex-wrap: wrap; font-size: 14px; }
+  .simulation-page .simulation-history-heading p { font-size: 10px; }
+  .simulation-page .simulation-history-row { padding: 12px 13px; }
+}

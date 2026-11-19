@@ -78,3 +78,22 @@ test('Simulation Studio practice mode offers answer selection, feedback and even
   assert.ok(styles.includes('.simulation-practice-panel'));
   assert.ok(styles.includes('@media (max-width: 760px)'));
 });
+
+
+test('Simulation Studio exposes experiment history, replay, deletion and clear controls', async () => {
+  const source = await readText('../src/features/simulation/SimulationPage.jsx');
+  for (const snippet of [
+    'Experiment history',
+    'YOUR LEARNING RECORD',
+    'Replay',
+    'Delete',
+    'Clear history',
+    'History replay',
+    'Return to active project',
+    'saveExperiment({ run: result, project })',
+    'runRoutingAlgorithm(replayProject, experiment.algorithm',
+  ]) assert.ok(source.includes(snippet), `Missing experiment-history behavior: ${snippet}`);
+  const styles = await readText('../src/styles/phase9-simulation-studio.css');
+  assert.ok(styles.includes('.simulation-history-panel'));
+  assert.ok(styles.includes('@media (max-width: 760px)'));
+});

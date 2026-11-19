@@ -67,7 +67,7 @@ export default function Topbar({ onMenuClick, isMobileMenuOpen, sidebarCollapsed
         description="An educational laboratory for making network routing easier to understand."
       >
         <div className="about-dialog-content">
-          <div className="about-mark"><span className="project-indicator" /> Phase 9.4 · Quality and testing hardening</div>
+          <div className="about-mark"><span className="project-indicator" /> Phase 10.3 · Experiment history</div>
           <p>RouteLab combines an interactive topology editor, deterministic Distance Vector and Link State engines, event-driven simulation playback, validated hop-by-hop packet forwarding, controlled network-change experiments and cross-algorithm comparison. This workspace is the hands-on lab; the public home page introduces the project and its learning workflow.</p>
           <div className="about-dialog-foot"><span>Computer Networks mini project</span><Button size="sm" onClick={() => setHelpOpen(false)}>Got it</Button></div>
         </div>

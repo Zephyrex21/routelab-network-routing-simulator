@@ -15,6 +15,7 @@ import { Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
 import { runRoutingAlgorithm } from '../../engine/algorithms/index.js';
 import { getActiveProject, getSavedProjects } from '../topology/model/projectStore.js';
+import { clearExperimentHistory, deleteExperiment, getExperimentHistory, getExperimentHistoryStatus, saveExperiment } from './model/experimentHistoryStore.js';
 import SimulationRouterNode from './components/SimulationRouterNode.jsx';
 import {
   buildLinkStateReplayIndex, getCurrentActivity, getCurrentSnapshotLabel,
@@ -42,6 +43,12 @@ function formatTime(value) {
   if (!value) return 'Not run yet';
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? 'Unknown time' : date.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+}
+
+function formatDateTime(value) {
+  if (!value) return 'Unknown date';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? 'Unknown date' : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
 function getEventTone(event) {
@@ -115,6 +122,45 @@ function LearningPracticePanel({ challenge, onRevealEvent, onClose }) {
           <CheckCircle2 size={20} />
           <div><strong>You’ve reached the end of the practice checkpoints.</strong><p>Move the event timeline backwards to revisit a decision, or rerun the algorithm to practise another sequence.</p></div>
         </div>
+      )}
+    </Card>
+  );
+}
+
+function ExperimentHistoryPanel({ experiments, status, onReplay, onDelete, onClear }) {
+  return (
+    <Card className="simulation-history-panel" padding="none">
+      <div className="simulation-history-heading">
+        <div>
+          <span className="eyebrow muted">YOUR LEARNING RECORD</span>
+          <h2>Experiment history <Badge tone="subtle">{experiments.length} / 20</Badge></h2>
+          <p>Successful runs are saved with their topology snapshot and metrics. Replaying rebuilds a run without changing your project library.</p>
+        </div>
+        <Button size="sm" variant="ghost" disabled={!experiments.length || !status.ok} onClick={onClear}>Clear history</Button>
+      </div>
+      {!status.ok ? (
+        <div className="simulation-history-empty" role="alert"><strong>History needs recovery</strong><p>{status.message}</p></div>
+      ) : experiments.length ? (
+        <div className="simulation-history-list" aria-label="Saved experiments">
+          {experiments.map((experiment) => (
+            <article className="simulation-history-row" key={experiment.id} data-experiment-id={experiment.id}>
+              <div className="simulation-history-main">
+                <div className="simulation-history-title">
+                  <strong>{experiment.projectName}</strong>
+                  <Badge tone={experiment.algorithm === 'distance-vector' ? 'info' : 'success'}>{experiment.algorithm === 'distance-vector' ? 'Distance Vector' : 'Link State'}</Badge>
+                </div>
+                <span className="simulation-history-meta">{formatDateTime(experiment.startedAt)} · Revision {experiment.topologyRevision} · {experiment.eventCount.toLocaleString()} events</span>
+                <small>{experiment.summary}</small>
+              </div>
+              <div className="simulation-history-actions">
+                <Button size="sm" variant="secondary" onClick={() => onReplay(experiment)}>Replay</Button>
+                <Button size="sm" variant="ghost" onClick={() => onDelete(experiment.id)} aria-label={`Delete ${experiment.projectName} ${experiment.algorithm === 'distance-vector' ? 'Distance Vector' : 'Link State'} experiment`}>Delete</Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="simulation-history-empty"><Clock3 size={20} /><div><strong>No experiments saved yet</strong><p>Run an algorithm to automatically save its topology snapshot, routing model and results here.</p></div></div>
       )}
     </Card>
   );
@@ -323,6 +369,9 @@ export default function SimulationPage() {
   const [selectedDestinationId, setSelectedDestinationId] = useState(project?.routers?.[1]?.id || project?.routers?.[0]?.id || '');
   const [runError, setRunError] = useState('');
   const [isPracticeMode, setIsPracticeMode] = useState(false);
+  const [historyExperiments, setHistoryExperiments] = useState(getExperimentHistory);
+  const [historyStatus, setHistoryStatus] = useState(getExperimentHistoryStatus);
+  const [historyReplayId, setHistoryReplayId] = useState(null);
 
   const hasProject = Boolean(project);
   const routerIds = useMemo(() => project?.routers.map((router) => router.id) || [], [project]);
@@ -349,6 +398,7 @@ export default function SimulationPage() {
   const highlightedPath = selectedRoute?.status === 'reachable' ? selectedRoute.path || [] : [];
   const eventProgress = run ? getPlaybackProgress(cursor, run.events.length) : 0;
   const currentMetrics = run?.metrics || {};
+  const historyReplay = historyReplayId !== null;
   const isAtEnd = Boolean(run && cursor >= run.events.length - 1);
 
   useEffect(() => {
@@ -363,9 +413,26 @@ export default function SimulationPage() {
     return () => window.clearTimeout(timer);
   }, [isPlaying, run, cursor, speed]);
 
+  const refreshExperimentHistory = useCallback(() => {
+    setHistoryStatus(getExperimentHistoryStatus());
+    setHistoryExperiments(getExperimentHistory());
+  }, []);
+
   useEffect(() => {
-    const syncProject = () => {
+    const syncHistory = () => refreshExperimentHistory();
+    window.addEventListener('routelab:experiment-history-changed', syncHistory);
+    window.addEventListener('storage', syncHistory);
+    return () => {
+      window.removeEventListener('routelab:experiment-history-changed', syncHistory);
+      window.removeEventListener('storage', syncHistory);
+    };
+  }, [refreshExperimentHistory]);
+
+  useEffect(() => {
+    const syncProject = (event) => {
+      if (event?.type === 'storage' && event.key && event.key !== 'routelab-project-library-v1') return;
       const nextProject = getActiveProject();
+      setHistoryReplayId(null);
       if (!nextProject) {
         setProject(null);
         setRun(null);
@@ -413,6 +480,11 @@ export default function SimulationPage() {
         throw new Error('The routing engine returned a result for a different topology revision.');
       }
       setRun(result);
+      setHistoryReplayId(null);
+      setIsPracticeMode(false);
+      const historySave = saveExperiment({ run: result, project });
+      if (historySave.ok) refreshExperimentHistory();
+      else notify(historySave.message, 'info');
       setCursor(0);
       setIsPlaying(result.events.length > 1);
       setSelectedRouterId(project.routers[0]?.id || '');
@@ -424,16 +496,66 @@ export default function SimulationPage() {
       setRunError(error instanceof Error ? error.message : 'The routing simulation could not be generated.');
       notify('Simulation could not be generated. Check the saved topology.', 'error');
     }
-  }, [project, algorithm, notify]);
+  }, [project, algorithm, notify, refreshExperimentHistory]);
 
   const handleAlgorithmChange = (nextAlgorithm) => {
     if (nextAlgorithm === algorithm) return;
     setAlgorithm(nextAlgorithm);
+    setIsPracticeMode(false);
     setRun(null);
     setCursor(-1);
     setIsPlaying(false);
     setRunError('');
   };
+
+  const handleReplayExperiment = useCallback((experiment) => {
+    try {
+      const replayProject = JSON.parse(JSON.stringify(experiment.projectSnapshot));
+      const replayRun = runRoutingAlgorithm(replayProject, experiment.algorithm, {
+        runId: experiment.runId, startedAt: experiment.startedAt,
+      });
+      setProject(replayProject);
+      setAlgorithm(experiment.algorithm);
+      setRun(replayRun);
+      setCursor(0);
+      setIsPlaying(false);
+      setIsPracticeMode(false);
+      setHistoryReplayId(experiment.id);
+      setSelectedRouterId(replayProject.routers[0]?.id || '');
+      setSelectedDestinationId(replayProject.routers[1]?.id || replayProject.routers[0]?.id || '');
+      setRunError('');
+      notify('Experiment restored from its saved topology snapshot.', 'success');
+    } catch (error) {
+      notify(error instanceof Error ? error.message : 'This experiment could not be replayed.', 'error');
+    }
+  }, [notify]);
+
+  const handleDeleteExperiment = useCallback((experimentId) => {
+    const result = deleteExperiment(experimentId);
+    if (result.ok) refreshExperimentHistory();
+    else notify(result.message, 'error');
+  }, [notify, refreshExperimentHistory]);
+
+  const handleClearExperimentHistory = useCallback(() => {
+    const result = clearExperimentHistory();
+    if (result.ok) {
+      refreshExperimentHistory();
+      notify('Experiment history cleared.', 'success');
+    } else notify(result.message, 'error');
+  }, [notify, refreshExperimentHistory]);
+
+  const handleReturnToActiveProject = useCallback(() => {
+    const activeProject = getActiveProject();
+    setProject(activeProject);
+    setRun(null);
+    setCursor(-1);
+    setIsPlaying(false);
+    setIsPracticeMode(false);
+    setHistoryReplayId(null);
+    setRunError('');
+    setSelectedRouterId(activeProject?.routers?.[0]?.id || '');
+    setSelectedDestinationId(activeProject?.routers?.[1]?.id || activeProject?.routers?.[0]?.id || '');
+  }, []);
 
   const handlePlayPause = useCallback(() => {
     if (!run) {
@@ -506,6 +628,7 @@ export default function SimulationPage() {
       <div className="page simulation-page">
         <PageHeader eyebrow="WORKSPACE / ALGORITHM EXECUTION" title="Simulation Studio" description="Run the routing algorithms against a saved topology. Follow each event, inspect routing tables and replay the process." actions={<Badge tone="info">Phase 4 · Interactive</Badge>} />
         <EmptySimulation hasSavedProjects={getSavedProjects().length > 0} />
+        <ExperimentHistoryPanel experiments={historyExperiments} status={historyStatus} onReplay={handleReplayExperiment} onDelete={handleDeleteExperiment} onClear={handleClearExperimentHistory} />
       </div>
     );
   }
@@ -528,7 +651,10 @@ export default function SimulationPage() {
           <span className="simulation-project-icon"><Activity size={17} /></span>
           <div><span className="eyebrow muted">SAVED TOPOLOGY</span><strong>{project.name}</strong><small>{project.routers.length} routers · {project.links.filter((link) => link.status === 'up').length} active links · Revision {project.topologyRevision}</small></div>
         </div>
-        <div className="simulation-project-actions"><Badge tone="success" dot>Saved snapshot</Badge><Link to="/studio" className="simulation-studio-link">Edit topology <ArrowRight size={13} /></Link></div>
+        <div className="simulation-project-actions">
+          {historyReplay ? <><Badge tone="info" dot>History replay</Badge><Button size="sm" variant="ghost" onClick={handleReturnToActiveProject}>Return to active project</Button></> : <Badge tone="success" dot>Saved snapshot</Badge>}
+          <Link to="/studio" className="simulation-studio-link">Edit topology <ArrowRight size={13} /></Link>
+        </div>
       </div>
 
       <div className="simulation-control-bar">
@@ -626,6 +752,8 @@ export default function SimulationPage() {
           onClose={() => setIsPracticeMode(false)}
         />
       )}
+
+      <ExperimentHistoryPanel experiments={historyExperiments} status={historyStatus} onReplay={handleReplayExperiment} onDelete={handleDeleteExperiment} onClear={handleClearExperimentHistory} />
 
       <section className="simulation-metrics-block" aria-label="Algorithm run totals">
         <div className="simulation-metrics-intro"><span className="eyebrow muted">RUN TOTALS</span><small>Final model counters for the complete generated run. These are not playback elapsed-time measurements.</small></div>
