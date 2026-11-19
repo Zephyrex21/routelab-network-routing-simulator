@@ -59,6 +59,19 @@ function downloadProject(project) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+function downloadLibraryRecoveryBackup(rawContent) {
+  if (typeof rawContent !== 'string') return;
+  const blob = new Blob([rawContent], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'routelab-project-library-recovery-backup.json';
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function NetworkStudioContent() {
   const { notify } = useToast();
   const { theme } = useTheme();
@@ -82,6 +95,7 @@ function NetworkStudioContent() {
   const [replaceDialogOpen, setReplaceDialogOpen] = useState(false);
   const [pendingProject, setPendingProject] = useState(null);
   const [savedProjects, setSavedProjects] = useState(() => getSavedProjects());
+  const [libraryRecovery, setLibraryRecovery] = useState(null);
   const [routerLabelDraft, setRouterLabelDraft] = useState('');
   const [linkCostDraft, setLinkCostDraft] = useState('');
   const [importing, setImporting] = useState(false);
@@ -352,6 +366,7 @@ function NetworkStudioContent() {
 
   const openLibrary = useCallback(() => {
     const status = getProjectLibraryStatus();
+    setLibraryRecovery(status.ok ? null : status);
     if (!status.ok) notify(status.message, 'error');
     setSavedProjects(getSavedProjects());
     setLibraryOpen(true);
@@ -587,6 +602,17 @@ function NetworkStudioContent() {
       </Dialog>
 
       <Dialog open={libraryOpen} onClose={() => setLibraryOpen(false)} title="Saved projects" description="Projects are stored locally in this browser. Export JSON to keep an external backup.">
+        {libraryRecovery && (
+          <div className="phase2-validation-summary" role="alert">
+            <div>
+              <strong>Saved library needs recovery</strong>
+              <small>{libraryRecovery.message}</small>
+            </div>
+            <Button size="sm" variant="secondary" icon={ArrowDownToLine} onClick={() => downloadLibraryRecoveryBackup(libraryRecovery.rawContent)}>
+              Download raw backup
+            </Button>
+          </div>
+        )}
         <div className="phase2-library-list">
           {savedProjects.length === 0 ? <div className="phase2-library-empty"><FolderOpen size={22} /><strong>No saved projects yet</strong><span>Use Save project to add your current topology to this list.</span></div> : savedProjects.map((project) => (
             <div className="phase2-library-item" key={project.projectId}>
