@@ -153,13 +153,39 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`${baseUrl}/lab/simulation`, { waitUntil: 'domcontentloaded' });
   await page.locator('#main-content h1').waitFor({ state: 'visible' });
-  const mobileSize = await page.evaluate(() => ({
-    viewport: document.documentElement.clientWidth,
-    document: document.documentElement.scrollWidth,
-  }));
+  const mobileSize = await page.evaluate(() => {
+    const viewport = document.documentElement.clientWidth;
+    const offenders = [...document.querySelectorAll('body *')]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        const className = typeof element.className === 'string' ? element.className : element.className?.baseVal || '';
+        return {
+          tag: element.tagName.toLowerCase(),
+          id: element.id || '',
+          className: className.slice(0, 100),
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          position: style.position,
+          overflowX: style.overflowX,
+          parent: element.parentElement?.tagName.toLowerCase(),
+          parentClass: typeof element.parentElement?.className === 'string' ? element.parentElement.className.slice(0, 80) : '',
+        };
+      })
+      .filter((element) => element.width > 0 && element.right > viewport + 2
+        && element.position !== 'fixed' && element.position !== 'absolute')
+      .sort((left, right) => right.right - left.right)
+      .slice(0, 18);
+    return {
+      viewport,
+      document: document.documentElement.scrollWidth,
+      offenders,
+    };
+  });
   assert.ok(
     mobileSize.document <= mobileSize.viewport + 2,
-    `Simulation Studio overflows at 390px (${mobileSize.document}px document / ${mobileSize.viewport}px viewport)`,
+    `Simulation Studio overflows at 390px (${mobileSize.document}px document / ${mobileSize.viewport}px viewport). Offenders: ${JSON.stringify(mobileSize.offenders)}`,
   );
   await page.emulateMedia({ reducedMotion: 'reduce' });
   assert.equal(await page.evaluate(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches), true);
