@@ -247,22 +247,29 @@ export default function ComparePage() {
 
   const handleRunFailureComparison = () => {
     if (!project) return;
-    const result = runFailureScenarioComparison(project, {
-      linkId,
-      operation,
-      nextCost: costInput,
-      sourceRouterId,
-      destinationRouterId,
-    });
-    if (!result.ok) {
+    try {
+      const result = runFailureScenarioComparison(project, {
+        linkId,
+        operation,
+        nextCost: costInput,
+        sourceRouterId,
+        destinationRouterId,
+      });
+      if (!result.ok) {
+        setFailureResult(null);
+        setFailureError(result.message);
+        notify(result.message, 'warning');
+        return;
+      }
+      setFailureResult(result);
+      setFailureError('');
+      notify('Both algorithms were rerun on the baseline and modified topologies.', 'success');
+    } catch (error) {
       setFailureResult(null);
-      setFailureError(result.message);
-      notify(result.message, 'warning');
-      return;
+      const message = error instanceof Error ? error.message : 'The failure comparison could not be completed.';
+      setFailureError(message);
+      notify(message, 'error');
     }
-    setFailureResult(result);
-    setFailureError('');
-    notify('Both algorithms were rerun on the baseline and modified topologies.', 'success');
   };
 
   if (!project) return <div className="page feature-page compare-page"><PageHeader eyebrow="WORKSPACE / ROUTING MODELS" title="Compare algorithms" description="Run Distance Vector and Link State against one saved network." /><EmptyComparisonState /></div>;
