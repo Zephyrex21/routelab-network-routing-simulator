@@ -4,18 +4,18 @@ import { readFile } from 'node:fs/promises';
 
 const readText = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 
-test('Network Studio removes the minimap and enables left-drag canvas panning', async () => {
+test('Network Studio removes the minimap and assigns canvas movement to Pan mode', async () => {
   const source = await readText('../src/features/topology/NetworkStudioPage.jsx');
   assert.ok(!source.includes('MiniMap'), 'The minimap component and import should be removed');
-  assert.ok(source.includes('panOnDrag={true}'), 'Primary-button canvas panning should always be available');
+  assert.ok(source.includes("panOnDrag={toolMode === 'pan'}"), 'Primary-button canvas panning should be exclusive to Pan mode');
   assert.ok(source.includes('selectionOnDrag={false}'), 'Canvas drag should pan instead of drawing a selection box');
   assert.ok(source.includes("nodesDraggable={toolMode === 'select'}"), 'Router repositioning should remain available in Select mode');
   assert.ok(source.includes("nodesConnectable={toolMode === 'connect'}"), 'Link creation should remain isolated to Connect mode');
 });
 
-test('Network Studio explains canvas panning and router repositioning separately', async () => {
+test('Network Studio explains the distinct Select and Pan gestures', async () => {
   const source = await readText('../src/features/topology/NetworkStudioPage.jsx');
-  assert.ok(source.includes('Drag the empty canvas to pan · Drag routers to reposition'));
+  assert.ok(source.includes('Select: drag routers · Pan: drag the empty canvas'));
 });
 
 test('public homepage uses a wider centered desktop gutter with responsive mobile gutters', async () => {
