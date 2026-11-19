@@ -135,6 +135,18 @@ try {
   await page.getByRole('button', { name: 'Check answer' }).click();
   await page.locator('.simulation-practice-feedback[role="status"]').waitFor({ state: 'visible' });
   await page.getByRole('button', { name: 'Reveal step & continue' }).click();
+  await page.getByRole('button', { name: 'Rerun' }).click();
+  await page.locator('.simulation-history-row').nth(1).waitFor({ state: 'visible' });
+  const historyRows = page.locator('.simulation-history-row');
+  assert.equal(await historyRows.count(), 2, 'Each successful run should create a history entry');
+  await historyRows.first().getByRole('button', { name: 'Replay' }).click();
+  await page.getByText('History replay', { exact: true }).waitFor({ state: 'visible' });
+  await page.getByRole('button', { name: 'Return to active project' }).click();
+  await historyRows.first().getByRole('button', { name: /Delete/ }).click();
+  assert.equal(await historyRows.count(), 1, 'Deleting one experiment should retain the other');
+  await page.getByRole('button', { name: 'Clear history' }).click();
+  await page.getByText('No experiments saved yet').waitFor({ state: 'visible' });
+  passed.push('Simulation Studio experiment auto-save, replay, delete and clear');
   passed.push('Simulation Studio prediction practice and answer feedback');
   passed.push('Simulation Studio run and event timeline');
 

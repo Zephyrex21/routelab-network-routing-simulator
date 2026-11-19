@@ -44,7 +44,7 @@ test('Phase 9 foundation establishes a readable hierarchy and responsive gutters
   assert.match(styles, /prefers-reduced-motion/);
 });
 
-test('release version, lockfile and Phase 9.4 labels remain aligned', async () => {
+test('release version, lockfile and Phase 10.3 labels remain aligned', async () => {
   const pkg = JSON.parse(await readText('../package.json'));
   const lock = JSON.parse(await readText('../package-lock.json'));
   const sidebar = await readText('../src/components/layout/Sidebar.jsx');
@@ -53,7 +53,7 @@ test('release version, lockfile and Phase 9.4 labels remain aligned', async () =
   assert.equal(pkg.version, '0.9.6');
   assert.equal(lock.version, pkg.version);
   assert.equal(lock.packages[''].version, pkg.version);
-  assert.match(sidebar, /v0\.9\.6 · Phase 9\.4/);
-  assert.match(topbar, /Phase 9\.4 · Quality and testing hardening/);
-  assert.match(overview, /Phase 9\.4 · Quality and testing hardening/);
+  assert.match(sidebar, /v0\.9\.6 · Phase 10\.3/);
+  assert.match(topbar, /Phase 10\.3 · Experiment history/);
+  assert.match(overview, /Phase 10\.3 · Experiment history/);
 });

@@ -1,5 +1,14 @@
 # Changelog
 
+## Phase 10.3 — Experiment History
+
+- Automatically saves successful routing runs as compact history records with algorithm, topology snapshot, timestamps, event count and run metrics.
+- Adds a bounded 20-experiment history with individual deletion and clear-all controls.
+- Replays experiments from their saved topology snapshot using the original algorithm and run ID, without changing the active project library.
+- Keeps history in a separate versioned local-storage key with malformed-data preservation and storage-failure handling.
+- Adds model, workspace and Chromium browser regression coverage for save, replay, delete and clear flows.
+
+
 ## Phase 10.2 — Interactive Learning Mode
 
 - Added prediction challenges based on the next unseen Distance Vector or Link State decision in the simulation event stream.
