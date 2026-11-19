@@ -1,5 +1,14 @@
 # Changelog
 
+## Phase 10.1 — Guided Algorithm Explanations
+
+- Added event-aware, student-facing explanations for Distance Vector updates, neighbour advertisements and convergence.
+- Added Link State explanations for LSA flooding, Dijkstra settling and route relaxation decisions.
+- Integrated a live learning panel into Simulation Studio that follows the selected playback event, including a useful pre-run state.
+- Kept explanations in the presentation/view-model layer; routing algorithms and simulation output contracts remain unchanged.
+- Added model and workspace regression tests for explanation coverage.
+
+
 ## 0.9.6 — Active-project reliability
 
 - Standardized Simulation Studio, Packet Explorer, Network Failure Lab and Comparison Lab on the explicit active-project selection contract; no workspace silently falls back to an unrelated saved project.

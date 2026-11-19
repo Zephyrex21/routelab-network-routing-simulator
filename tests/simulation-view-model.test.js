@@ -8,6 +8,7 @@ import {
   getCurrentActivity,
   getCurrentSnapshotLabel,
   getDistanceVectorTable,
+  getEventExplanation,
   getEventFacts,
   getEventLabel,
   getLinkStateTableAt,
@@ -198,4 +199,39 @@ test('Link State replay index bounds each router lookup to its own Dijkstra rang
     assert.equal(getLinkStateTableAt(run, end, router.id, project.routers.map((item) => item.id), index).status, 'completed');
     assert.equal(getLinkStateTableAt(run, start - 1, router.id, project.routers.map((item) => item.id), index).status, 'waiting');
   }
+});
+
+
+test('guided explanations teach Distance Vector updates and convergence from the current event', () => {
+  const run = runDistanceVector(project);
+  const update = run.events.find((event) => event.type === 'distance-vector.route.updated');
+  const updateGuide = getEventExplanation(update);
+  assert.match(updateGuide.title, /changes its route/);
+  assert.match(updateGuide.explanation, /cost changes from/);
+  assert.match(updateGuide.takeaway, /newly calculated candidate/);
+
+  const convergence = run.events.find((event) => event.type === 'distance-vector.converged');
+  assert.match(getEventExplanation(convergence).explanation, /stable routing tables/);
+});
+
+test('guided explanations teach Link State flooding, Dijkstra settling and relaxation', () => {
+  const run = runLinkState(project);
+  const flood = run.events.find((event) => event.type === 'link-state.flooding.completed');
+  assert.match(getEventExplanation(flood).takeaway, /Dijkstra/);
+
+  const settled = run.events.find((event) => event.type === 'link-state.dijkstra.vertex.settled');
+  assert.match(getEventExplanation(settled).explanation, /distance from the source/);
+
+  const update = run.events.find((event) => event.type === 'link-state.dijkstra.relaxation.updated');
+  const guide = getEventExplanation(update);
+  assert.match(guide.explanation, /candidate cost/);
+  assert.match(guide.takeaway, /distance\(source, current\)/);
+
+  const checked = run.events.find((event) => event.type === 'link-state.dijkstra.relaxation.checked');
+  assert.match(getEventExplanation(checked).explanation, /candidate cost/);
+});
+
+test('guided explanation has a useful pre-run state and safe fallback for unknown events', () => {
+  assert.match(getEventExplanation(null).explanation, /Run Distance Vector or Link State/);
+  assert.match(getEventExplanation({ type: 'custom.event', message: 'A custom step' }).explanation, /A custom step/);
 });

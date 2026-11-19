@@ -8,6 +8,10 @@ RouteLab is an educational Computer Networks project built in controlled phases.
 
 > **Current status: Phase 9.4 — Quality & Testing Hardening (v0.9.6).** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
 
+## Learning experience
+
+Simulation Studio includes guided, event-by-event explanations for Distance Vector and Link State. Step through the timeline to understand neighbour advertisements, route updates, LSA flooding, Dijkstra relaxation and convergence without changing the underlying routing engine.
+
 ## Live demo
 
 Try RouteLab in your browser: [routelab-network-routing-simulator.vercel.app](https://routelab-network-routing-simulator.vercel.app/).
