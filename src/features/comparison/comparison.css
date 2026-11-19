@@ -144,3 +144,11 @@
   .comparison-route-stats { gap: 5px; }
   .comparison-route-stats > div { padding-left: 7px; }
 }
+
+
+/* Phase 10.4 — exportable comparison report */
+.comparison-report-action { display: flex; justify-content: flex-end; margin-top: 13px; }
+@media (max-width: 520px) {
+  .comparison-report-action { justify-content: stretch; }
+  .comparison-report-action .button { width: 100%; justify-content: center; }
+}

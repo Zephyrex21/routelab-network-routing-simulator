@@ -97,3 +97,16 @@ test('Simulation Studio exposes experiment history, replay, deletion and clear c
   assert.ok(styles.includes('.simulation-history-panel'));
   assert.ok(styles.includes('@media (max-width: 760px)'));
 });
+
+
+test('Simulation Studio exposes print-ready report export for a generated run', async () => {
+  const source = await readText('../src/features/simulation/SimulationPage.jsx');
+  assert.ok(source.includes('createSimulationReportHtml({ project, run })'));
+  assert.ok(source.includes('openPrintableReport(html)'));
+  assert.ok(source.includes('Export report'));
+  assert.ok(source.includes('disabled={!run}'));
+  const report = await readText('../src/shared/utils/learningReports.js');
+  for (const snippet of ['createSimulationReportHtml', 'Final routing tables', 'Learning highlights', 'topology-diagram', 'Print / Save as PDF']) {
+    assert.ok(report.includes(snippet), `Missing simulation report content: ${snippet}`);
+  }
+});

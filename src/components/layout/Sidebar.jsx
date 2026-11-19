@@ -90,9 +90,9 @@ export default function Sidebar({ collapsed = false, mobileOpen, onNavigate, onC
             <div className="learning-icon"><CircleHelp size={18} /></div>
             <div><strong>Learning mode</strong><span>Built for understanding</span></div>
           </div>
-          <div className="sidebar-build" title={collapsed ? 'Experiment history · Version 0.9.6' : undefined}>
-            <span><span className="build-dot" /> <span className="sidebar-build-label">Experiment history</span></span>
-            <span>v0.9.6 · Phase 10.3</span>
+          <div className="sidebar-build" title={collapsed ? 'Learning reports · Version 0.9.6' : undefined}>
+            <span><span className="build-dot" /> <span className="sidebar-build-label">Learning reports</span></span>
+            <span>v0.9.6 · Phase 10.4</span>
           </div>
         </div>
       </aside>

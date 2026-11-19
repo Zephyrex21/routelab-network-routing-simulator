@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  Activity, ArrowRight, CheckCircle2, Clock3, FastForward, GitBranch,
+  Activity, ArrowRight, CheckCircle2, Clock3, FastForward, FileDown, GitBranch,
   Pause, Play, Radio, RotateCcw, SkipBack, SkipForward, Sparkles,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -26,6 +26,7 @@ import {
 import {
   clampEventCursor, getPlaybackDelay, getPlaybackProgress, PLAYBACK_SPEEDS,
 } from './model/simulationController.js';
+import { createSimulationReportHtml, openPrintableReport } from '../../shared/utils/learningReports.js';
 import './simulation.css';
 
 const nodeTypes = { simulationRouter: SimulationRouterNode };
@@ -557,6 +558,17 @@ export default function SimulationPage() {
     setSelectedDestinationId(activeProject?.routers?.[1]?.id || activeProject?.routers?.[0]?.id || '');
   }, []);
 
+  const handleExportLearningReport = () => {
+    if (!run || !project) return;
+    try {
+      const html = createSimulationReportHtml({ project, run });
+      const result = openPrintableReport(html);
+      notify(result.message, result.ok ? 'success' : 'warning');
+    } catch (error) {
+      notify(error instanceof Error ? error.message : 'The learning report could not be generated.', 'error');
+    }
+  };
+
   const handlePlayPause = useCallback(() => {
     if (!run) {
       handleRun();
@@ -654,6 +666,7 @@ export default function SimulationPage() {
         <div className="simulation-project-actions">
           {historyReplay ? <><Badge tone="info" dot>History replay</Badge><Button size="sm" variant="ghost" onClick={handleReturnToActiveProject}>Return to active project</Button></> : <Badge tone="success" dot>Saved snapshot</Badge>}
           <Link to="/studio" className="simulation-studio-link">Edit topology <ArrowRight size={13} /></Link>
+          <Button size="sm" variant="secondary" icon={FileDown} disabled={!run} onClick={handleExportLearningReport}>Export report</Button>
         </div>
       </div>
 

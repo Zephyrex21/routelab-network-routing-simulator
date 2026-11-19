@@ -38,3 +38,15 @@ test('Comparison model reuses the canonical engine and packet route validator', 
   assert.match(model, /createLinkExperiment/);
   assert.match(model, /comparePacketRoutes/);
 });
+
+
+test('Comparison Lab exposes a printable report for current algorithm results', async () => {
+  const page = await read('src/features/comparison/ComparePage.jsx');
+  assert.ok(page.includes('createComparisonReportHtml'));
+  assert.ok(page.includes('Export comparison report'));
+  assert.ok(page.includes('failureResult: failureIsCurrent ? failureResult : null'));
+  const report = await read('src/shared/utils/learningReports.js');
+  for (const snippet of ['createComparisonReportHtml', 'Routing-table comparison', 'Work profiles', 'reachabilityDifferences']) {
+    assert.ok(report.includes(snippet), `Missing comparison report content: ${snippet}`);
+  }
+});

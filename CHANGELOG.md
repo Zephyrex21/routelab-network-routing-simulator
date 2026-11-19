@@ -1,5 +1,13 @@
 # Changelog
 
+## Phase 10.4 — Exportable Learning Reports
+
+- Adds standalone, print-styled HTML reports for individual simulations and Distance Vector vs Link State comparisons.
+- Includes topology SVGs, route tables, algorithm work metrics, selected event explanations and learning takeaways.
+- Comparison reports include all-pairs agreement summaries and optional baseline/modified-link experiment outcomes.
+- Adds report identity/revision validation, HTML escaping, printable PDF workflow and Chromium popup smoke coverage without adding a PDF library.
+
+
 ## Phase 10.3 — Experiment History
 
 - Automatically saves successful routing runs as compact history records with algorithm, topology snapshot, timestamps, event count and run metrics.

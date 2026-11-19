@@ -6,11 +6,11 @@
 
 RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 10.3 — Experiment History (v0.9.6).** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus guided algorithm explanations, interactive prediction practice and a compact experiment history.
+> **Current status: Phase 10.4 — Exportable Learning Reports (v0.9.6).** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus guided algorithm explanations, interactive prediction practice, a compact experiment history and printable learning reports.
 
 ## Learning experience
 
-Simulation Studio includes guided, event-by-event explanations and an interactive practice mode for Distance Vector and Link State. Predict the next unseen algorithm decision, submit an answer, review the reasoning and key takeaway, then reveal the recorded event. Practice challenges use the existing simulation event stream without changing the routing engine. Experiment History automatically keeps the latest 20 runs with their topology snapshots and metrics, so a previous setup can be replayed even after the active project changes.
+Simulation Studio includes guided, event-by-event explanations and an interactive practice mode for Distance Vector and Link State. Predict the next unseen algorithm decision, submit an answer, review the reasoning and key takeaway, then reveal the recorded event. Practice challenges use the existing simulation event stream without changing the routing engine. Experiment History automatically keeps the latest 20 runs with their topology snapshots and metrics, so a previous setup can be replayed even after the active project changes. Simulation and Comparison Labs can generate print-ready reports with topology diagrams, routing tables, work metrics and learning highlights; use Print / Save as PDF to export them.
 
 ## Live demo
 
