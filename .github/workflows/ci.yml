@@ -16,9 +16,9 @@ concurrency:
 
 jobs:
   quality:
-    name: Tests, production build and security audit
+    name: Lint, tests, browser smoke, production build and security audit
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
 
     steps:
       - name: Check out repository
@@ -33,11 +33,20 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Run ESLint static checks
+        run: npm run lint
+
       - name: Run automated tests
         run: npm test
 
       - name: Build production bundle
         run: npm run build
+
+      - name: Install Chromium for browser smoke tests
+        run: npm exec --yes --package=playwright@1.65.1 -- playwright install --with-deps chromium
+
+      - name: Run browser smoke and workspace regression tests
+        run: npm run test:e2e
 
       - name: Audit the complete dependency tree
         run: npm audit --audit-level=high

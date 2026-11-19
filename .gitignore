@@ -7,3 +7,7 @@ dist/
 !.env.example
 coverage/
 *.log
+
+# Playwright browser test output
+test-results/
+playwright-report/
