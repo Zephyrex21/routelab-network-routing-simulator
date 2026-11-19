@@ -12,7 +12,7 @@ import { Card } from '../../components/ui/Card.jsx';
 import { Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
 import { runRoutingAlgorithm } from '../../engine/algorithms/index.js';
-import { getLastProject, getSavedProjects } from '../topology/model/projectStore.js';
+import { getActiveProject, getSavedProjects } from '../topology/model/projectStore.js';
 import { createPacketRoute } from './model/packetRouting.js';
 import PacketTopologyView from './components/PacketTopologyView.jsx';
 import './packet-explorer.css';
@@ -27,10 +27,6 @@ const SPEED_OPTIONS = [
   { value: '1.5', label: '1.5× · Fast' },
   { value: '2', label: '2× · Faster' },
 ];
-
-function getActiveProject() {
-  return getLastProject();
-}
 
 function PacketEmptyState({ hasSavedProjects }) {
   return (

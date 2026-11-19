@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.6 — Active-project reliability
+
+- Standardized Simulation Studio, Packet Explorer, Network Failure Lab and Comparison Lab on the explicit active-project selection contract; no workspace silently falls back to an unrelated saved project.
+- Fixed missing `getSavedProjects` references that could crash Failure Lab and Comparison Lab when no project was selected.
+- Added runtime regression coverage for workspace empty states with saved projects present but no active selection.
+- Updated the README's live demo, Vite release, dependency-audit status and local setup guidance.
+- Clarified that the homepage topology graphic is an animated preview, not an editable canvas.
+
 ## 0.9.5 — Phase 9.1 Design System Foundation
 
 - Added a unified Inter interface typeface with system-font fallbacks and IBM Plex Mono for technical values.

@@ -123,7 +123,7 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   const sidebar = await readText('../src/components/layout/Sidebar.jsx');
   const topbar = await readText('../src/components/layout/Topbar.jsx');
   const overview = await readText('../src/features/dashboard/OverviewPage.jsx');
-  assert.equal(pkg.version, '0.9.5');
+  assert.equal(pkg.version, '0.9.6');
   assert.match(changelog, /0\.8\.0 — Phase 7/);
   assert.match(changelog, /0\.9\.0 — Phase 8: Public Home/);
   assert.match(changelog, /0\.9\.1 — Phase 8: Release Preparation/);
@@ -131,7 +131,7 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   assert.match(changelog, /0\.9\.3 — Vite 8 compatibility/);
   assert.match(changelog, /0\.9\.4 — Project state, persistence and simulation performance/);
   assert.match(changelog, /0\.9\.5 — Phase 9\.1 Design System Foundation/);
-  assert.match(sidebar, /v0\.9\.5 · Phase 9\.1/);
+  assert.match(sidebar, /v0\.9\.6 · Phase 9\.1/);
   assert.match(topbar, /Phase 9\.1 · design system foundation/);
   assert.match(overview, /Phase 9\.1 · design system foundation/);
 });

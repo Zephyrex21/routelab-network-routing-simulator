@@ -50,10 +50,10 @@ test('release version, lockfile and Phase 9.1 labels remain aligned', async () =
   const sidebar = await readText('../src/components/layout/Sidebar.jsx');
   const topbar = await readText('../src/components/layout/Topbar.jsx');
   const overview = await readText('../src/features/dashboard/OverviewPage.jsx');
-  assert.equal(pkg.version, '0.9.5');
+  assert.equal(pkg.version, '0.9.6');
   assert.equal(lock.version, pkg.version);
   assert.equal(lock.packages[''].version, pkg.version);
-  assert.match(sidebar, /v0\.9\.5 · Phase 9\.1/);
+  assert.match(sidebar, /v0\.9\.6 · Phase 9\.1/);
   assert.match(topbar, /Phase 9\.1 · design system foundation/);
   assert.match(overview, /Phase 9\.1 · design system foundation/);
 });
