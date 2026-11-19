@@ -46,7 +46,7 @@ test('Link State simulation reports include Dijkstra metrics and route-learning 
 
   assert.match(html, /Link State results/);
   assert.match(html, /Dijkstra Runs/);
-  assert.match(html, /Vertices Settled/);
+  assert.match(html, /Dijkstra Settled Vertices/);
   assert.match(html, /relaxation|settled|flooding/i);
 });
 
