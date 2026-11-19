@@ -28,7 +28,7 @@ import {
   createTopologyPreset, topologyPresetOptions,
 } from '../../shared/data/presets/topologyPresets.js';
 import {
-  activateProject, clearActiveProject, deleteSavedProject, getLastProject,
+  activateProject, clearActiveProject, deleteSavedProject, getActiveProject,
   getProjectLibraryStatus, getSavedProjects, saveProject,
 } from './model/projectStore.js';
 
@@ -37,7 +37,7 @@ const edgeLabelStyle = { fill: 'var(--text-secondary)', fontWeight: 650, fontSiz
 const edgeLabelBgStyle = { fill: 'var(--surface)', fillOpacity: 0.96 };
 
 function getInitialProject() {
-  const lastProject = getLastProject();
+  const lastProject = getActiveProject();
   return lastProject && validateProject(lastProject).valid ? lastProject : createTopologyPreset('starter');
 }
 
@@ -77,7 +77,7 @@ function NetworkStudioContent() {
   const { theme } = useTheme();
   const [baseProject, setBaseProject] = useState(getInitialProject);
   const [savedToLocalStorage, setSavedToLocalStorage] = useState(() => {
-    const lastProject = getLastProject();
+    const lastProject = getActiveProject();
     return Boolean(lastProject && validateProject(lastProject).valid);
   });
   const initialFlow = useMemo(() => projectToFlow(baseProject), []);
@@ -438,7 +438,7 @@ function NetworkStudioContent() {
           </div>
         </div>
         <div className="studio-toolbar-actions phase2-toolbar-actions">
-          <Badge tone={dirty ? 'warning' : 'success'} dot>{dirty ? 'Not saved' : 'Local workspace'}</Badge>
+          <Badge tone={dirty ? 'warning' : savedToLocalStorage ? 'success' : 'neutral'} dot>{dirty ? 'Unsaved edits' : savedToLocalStorage ? 'Saved locally' : 'Draft workspace'}</Badge>
           <Button variant="secondary" size="sm" icon={FilePlus2} onClick={() => { setNewProjectName('My network'); setNewDialogOpen(true); }}>New</Button>
           <div className="toolbar-menu-wrap">
             <Select
@@ -463,7 +463,7 @@ function NetworkStudioContent() {
       <div className="studio-layout phase2-studio-layout">
         <Card className="studio-tool-panel phase2-tool-panel" padding="sm">
           <div className="panel-mini-label">TOOLS</div>
-          <div className="tool-stack">
+          <div className="tool-stack" role="toolbar" aria-label="Network canvas tools">
             <Tooltip label="Select and move routers">
               <button type="button" className={`studio-tool-button ${toolMode === 'select' ? 'tool-active' : ''}`} aria-label="Select tool" aria-pressed={toolMode === 'select'} onClick={() => setToolMode('select')}><MousePointer2 size={17} /></button>
             </Tooltip>
@@ -492,7 +492,7 @@ function NetworkStudioContent() {
           <div className="canvas-topbar">
             <div className="canvas-topbar-left"><span className="canvas-status-dot canvas-status-live" /><strong>Topology canvas</strong><span className="canvas-meta">{nodes.length} routers · {edges.length} links</span></div>
             <div className="canvas-topbar-right">
-              <Badge tone="subtle">{toolMode === 'connect' ? 'Connect mode' : toolMode === 'pan' ? 'Pan mode' : 'Select mode'}</Badge>
+              <Badge tone="subtle">{toolMode === 'connect' ? 'Connect links' : toolMode === 'pan' ? 'Pan canvas' : 'Move routers'}</Badge>
               <IconButton icon={ZoomOut} label="Zoom out" size="sm" onClick={() => reactFlowRef.current?.zoomOut({ duration: 160 })} />
               <IconButton icon={ZoomIn} label="Zoom in" size="sm" onClick={() => reactFlowRef.current?.zoomIn({ duration: 160 })} />
               <IconButton icon={RefreshCw} label="Fit view" size="sm" onClick={fitCanvas} />
@@ -516,7 +516,7 @@ function NetworkStudioContent() {
               nodesConnectable={toolMode === 'connect'}
               nodesDraggable={toolMode === 'select'}
               elementsSelectable
-              panOnDrag={true}
+              panOnDrag={toolMode === 'pan'}
               selectionOnDrag={false}
               deleteKeyCode={['Backspace', 'Delete']}
               minZoom={0.25}
@@ -543,13 +543,13 @@ function NetworkStudioContent() {
                 <Button size="sm" icon={Plus} onClick={addRouter}>Add first router</Button>
               </div>
             )}
-            {toolMode === 'connect' && <div className="phase2-canvas-hint"><Link2 size={13} /> Drag from a router's blue handle to another router's handle</div>}
+            {toolMode === 'connect' && <div className="phase2-canvas-hint"><Link2 size={13} /> Drag from one router handle to another</div>}
           </div>
           <div className="canvas-footer phase2-canvas-footer">
             <span><span className="legend-node" /> Router</span>
             <span><span className="legend-link" /> Active link</span>
             <span><span className="legend-link legend-link-down" /> Disabled link</span>
-            <span className="canvas-footer-note">Drag the empty canvas to pan · Drag routers to reposition</span>
+            <span className="canvas-footer-note">Select: drag routers · Pan: drag the empty canvas</span>
           </div>
         </Card>
 
