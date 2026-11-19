@@ -54,6 +54,6 @@ test('release version, lockfile and Phase 9.4 labels remain aligned', async () =
   assert.equal(lock.version, pkg.version);
   assert.equal(lock.packages[''].version, pkg.version);
   assert.match(sidebar, /v0\.9\.6 · Phase 9\.4/);
-  assert.match(topbar, /Phase 9\.4 · UX and interaction polish/);
-  assert.match(overview, /Phase 9\.4 · UX and interaction polish/);
+  assert.match(topbar, /Phase 9\.4 · Quality and testing hardening/);
+  assert.match(overview, /Phase 9\.4 · Quality and testing hardening/);
 });

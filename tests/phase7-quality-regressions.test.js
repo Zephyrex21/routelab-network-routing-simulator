@@ -132,8 +132,8 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   assert.match(changelog, /0\.9\.4 — Project state, persistence and simulation performance/);
   assert.match(changelog, /0\.9\.5 — Phase 9\.1 Design System Foundation/);
   assert.match(sidebar, /v0\.9\.6 · Phase 9\.4/);
-  assert.match(topbar, /Phase 9\.4 · UX and interaction polish/);
-  assert.match(overview, /Phase 9\.4 · UX and interaction polish/);
+  assert.match(topbar, /Phase 9\.4 · Quality and testing hardening/);
+  assert.match(overview, /Phase 9\.4 · Quality and testing hardening/);
 });
 
 test('IconButton defaults to a non-submitting button type', async () => {
