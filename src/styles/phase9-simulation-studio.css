@@ -323,3 +323,10 @@
   .simulation-page .simulation-history-heading p { font-size: 10px; }
   .simulation-page .simulation-history-row { padding: 12px 13px; }
 }
+
+
+/* Phase 10.4 — print-ready simulation report action */
+.simulation-page .simulation-project-actions .button { flex: 0 0 auto; }
+@media (max-width: 760px) {
+  .simulation-page .simulation-project-actions .button { min-height: 32px; }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity, AlertTriangle, ArrowLeftRight, ArrowRight, CheckCircle2, GitBranch,
-  Info, Network, RefreshCw, Unplug,
+  FileDown, Info, Network, RefreshCw, Unplug,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../../components/layout/PageHeader.jsx';
@@ -17,6 +17,7 @@ import {
   runAlgorithmComparison,
   runFailureScenarioComparison,
 } from './model/algorithmComparison.js';
+import { createComparisonReportHtml, openPrintableReport } from '../../shared/utils/learningReports.js';
 import './comparison.css';
 
 const OPERATION_OPTIONS = [
@@ -272,6 +273,23 @@ export default function ComparePage() {
 
   const comparisonIsCurrent = comparison?.projectId === project.projectId && comparison?.topologyRevision === project.topologyRevision;
   const failureIsCurrent = failureResult?.projectId === project.projectId && failureResult?.topologyRevision === project.topologyRevision;
+
+  const handleExportComparisonReport = () => {
+    if (!comparison || !comparisonIsCurrent) return;
+    try {
+      const html = createComparisonReportHtml({
+        project,
+        comparison,
+        sourceRouterId,
+        destinationRouterId,
+        failureResult: failureIsCurrent ? failureResult : null,
+      });
+      const result = openPrintableReport(html);
+      notify(result.message, result.ok ? 'success' : 'warning');
+    } catch (error) {
+      notify(error instanceof Error ? error.message : 'The comparison report could not be generated.', 'error');
+    }
+  };
   const routerCount = project.routers.length;
   const activeLinks = project.links.filter((link) => link.status === 'up').length;
 
@@ -351,6 +369,9 @@ export default function ComparePage() {
             </div>
             <div className="comparison-metric-note"><Info size={15} /><p><b>How to interpret this:</b> Distance Vector rounds count synchronous table-exchange cycles; vector messages count directed neighbour advertisements. Link State counters describe LSA flooding and independent Dijkstra runs. A larger count in one category does not prove that an algorithm is slower.</p></div>
           </section>
+          <div className="comparison-report-action">
+            <Button variant="secondary" icon={FileDown} onClick={handleExportComparisonReport}>Export comparison report</Button>
+          </div>
         </>
       ) : (
         <Card className="comparison-awaiting-card">

@@ -135,6 +135,14 @@ try {
   await page.getByRole('button', { name: 'Check answer' }).click();
   await page.locator('.simulation-practice-feedback[role="status"]').waitFor({ state: 'visible' });
   await page.getByRole('button', { name: 'Reveal step & continue' }).click();
+  const simulationReportPromise = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Export report' }).click();
+  const simulationReport = await simulationReportPromise;
+  await simulationReport.getByRole('heading', { name: 'Simulation learning report' }).waitFor({ state: 'visible' });
+  await simulationReport.getByText('Final routing tables', { exact: true }).waitFor({ state: 'visible' });
+  assert.equal(await simulationReport.locator('.topology-diagram').count(), 1, 'Simulation report should include a topology diagram');
+  assert.equal(await simulationReport.getByRole('button', { name: 'Print / Save as PDF' }).count(), 1);
+  await simulationReport.close();
   await page.getByRole('button', { name: 'Rerun' }).click();
   await page.locator('.simulation-history-row').nth(1).waitFor({ state: 'visible' });
   const historyRows = page.locator('.simulation-history-row');
@@ -163,6 +171,14 @@ try {
   await page.goto(`${baseUrl}/lab/compare`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Run both algorithms' }).click();
   await page.getByRole('heading', { name: 'Routing-table comparison' }).waitFor({ state: 'visible', timeout: 15000 });
+  const comparisonReportPromise = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Export comparison report' }).click();
+  const comparisonReport = await comparisonReportPromise;
+  await comparisonReport.getByRole('heading', { name: 'Routing algorithms comparison report' }).waitFor({ state: 'visible' });
+  await comparisonReport.getByText('Work profiles', { exact: true }).waitFor({ state: 'visible' });
+  assert.equal(await comparisonReport.locator('.topology-diagram').count(), 1, 'Comparison report should include a topology diagram');
+  await comparisonReport.close();
+  passed.push('Comparison Lab exportable comparison report');
   passed.push('Comparison Lab dual-algorithm run');
 
   await page.goto(`${baseUrl}/lab/overview`, { waitUntil: 'domcontentloaded' });

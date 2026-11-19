@@ -131,9 +131,9 @@ test('Phase 7 hardening remains recorded and current Phase 8 release metadata is
   assert.match(changelog, /0\.9\.3 — Vite 8 compatibility/);
   assert.match(changelog, /0\.9\.4 — Project state, persistence and simulation performance/);
   assert.match(changelog, /0\.9\.5 — Phase 9\.1 Design System Foundation/);
-  assert.match(sidebar, /v0\.9\.6 · Phase 10\.3/);
-  assert.match(topbar, /Phase 10\.3 · Experiment history/);
-  assert.match(overview, /Phase 10\.3 · Experiment history/);
+  assert.match(sidebar, /v0\.9\.6 · Phase 10\.4/);
+  assert.match(topbar, /Phase 10\.4 · Exportable learning reports/);
+  assert.match(overview, /Phase 10\.4 · Exportable learning reports/);
 });
 
 test('IconButton defaults to a non-submitting button type', async () => {

@@ -36,7 +36,7 @@ export default function OverviewPage() {
       <section className="overview-hero">
         <div className="overview-hero-copy">
           <div className="eyebrow"><span className="eyebrow-mark" /> ROUTELAB / LEARNING LABORATORY</div>
-          <Badge tone="success" dot>Phase 10.3 · Experiment history</Badge>
+          <Badge tone="success" dot>Phase 10.4 · Exportable learning reports</Badge>
           <h1>Understand the route.<br /><span>Not just the result.</span></h1>
           <p className="overview-lede">A visual learning space for exploring how networks make routing decisions. Build a topology, follow the logic, and see the path come together.</p>
           <div className="overview-hero-actions">
@@ -60,7 +60,7 @@ export default function OverviewPage() {
 
       <section className="scope-strip" aria-label="Current project status">
         <div className="scope-status"><span className="scope-status-icon"><CircleDot size={17} /></span><div><strong>Topology editor available</strong><span>Build and save custom network layouts</span></div></div>
-        <div className="scope-next"><span>NEXT MILESTONE</span><strong>Experiment history</strong><Badge tone="info">Phase 10.3</Badge></div>
+        <div className="scope-next"><span>NEXT MILESTONE</span><strong>Exportable learning reports</strong><Badge tone="info">Phase 10.4</Badge></div>
         <Link to="/lab/simulation" className="scope-arrow" aria-label="Open Simulation Studio"><ArrowRight size={18} /></Link>
       </section>
 
