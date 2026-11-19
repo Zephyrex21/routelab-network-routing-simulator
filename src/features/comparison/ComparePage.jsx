@@ -10,7 +10,7 @@ import Button from '../../components/ui/Button.jsx';
 import { Card } from '../../components/ui/Card.jsx';
 import { Input, Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
-import { getLastProject, getSavedProjects } from '../topology/model/projectStore.js';
+import { getLastProject } from '../topology/model/projectStore.js';
 import {
   getPairComparison,
   getRoutingTableComparison,

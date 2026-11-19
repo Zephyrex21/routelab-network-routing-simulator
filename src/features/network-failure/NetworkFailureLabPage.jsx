@@ -12,7 +12,7 @@ import { Input, Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
 import { runRoutingAlgorithm } from '../../engine/algorithms/index.js';
 import { createProject } from '../topology/model/projectModel.js';
-import { getLastProject, getSavedProjects, saveProject } from '../topology/model/projectStore.js';
+import { getLastProject, saveProject } from '../topology/model/projectStore.js';
 import { createPacketRoute } from '../packet-explorer/model/packetRouting.js';
 import PacketTopologyView from '../packet-explorer/components/PacketTopologyView.jsx';
 import { comparePacketRoutes, createLinkExperiment } from './model/failureExperiment.js';

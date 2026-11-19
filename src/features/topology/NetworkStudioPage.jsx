@@ -28,7 +28,8 @@ import {
   createTopologyPreset, topologyPresetOptions,
 } from '../../shared/data/presets/topologyPresets.js';
 import {
-  deleteSavedProject, getLastProject, getSavedProjects, saveProject,
+  activateProject, clearActiveProject, deleteSavedProject, getLastProject,
+  getProjectLibraryStatus, getSavedProjects, saveProject,
 } from './model/projectStore.js';
 
 const nodeTypes = { router: RouterNode };
@@ -54,7 +55,8 @@ function downloadProject(project) {
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  URL.revokeObjectURL(url);
+  // Some browsers begin the download after the click handler returns.
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function NetworkStudioContent() {
@@ -129,6 +131,8 @@ function NetworkStudioContent() {
       notify(validation.errors[0] || 'This project could not be loaded.', 'error');
       return false;
     }
+    const selectionResult = persisted ? activateProject(project.projectId) : clearActiveProject();
+    if (!selectionResult.ok) notify(selectionResult.message || 'Active-project selection could not be updated.', 'warning');
     const flow = projectToFlow(project);
     setBaseProject(project);
     setProjectName(project.name);
@@ -347,15 +351,21 @@ function NetworkStudioContent() {
   }, [requestProjectSwitch, notify]);
 
   const openLibrary = useCallback(() => {
+    const status = getProjectLibraryStatus();
+    if (!status.ok) notify(status.message, 'error');
     setSavedProjects(getSavedProjects());
     setLibraryOpen(true);
-  }, []);
+  }, [notify]);
 
   const loadFromLibrary = useCallback((project) => {
     requestProjectSwitch(project, `“${project.name}” opened.`, true, true);
   }, [requestProjectSwitch]);
 
   const removeFromLibrary = useCallback((projectId) => {
+    if (baseProject.projectId === projectId) {
+      notify('Switch to another project before deleting the topology currently open in Network Studio.', 'warning');
+      return;
+    }
     const result = deleteSavedProject(projectId);
     if (!result.ok) {
       notify(result.message, 'error');
@@ -363,7 +373,7 @@ function NetworkStudioContent() {
     }
     setSavedProjects(getSavedProjects());
     notify('Saved project removed from this browser.', 'success');
-  }, [notify]);
+  }, [notify, baseProject.projectId]);
 
   const onNodeClick = useCallback((_, node) => {
     setSelected({ type: 'router', id: node.id });

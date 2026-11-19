@@ -145,21 +145,36 @@ function reconstructPath(sourceRouterId, destinationRouterId, previous) {
   return path.reverse();
 }
 
-/** Build the currently visible Link State table by replaying only Dijkstra events
- * up to the selected event. This keeps the UI honest: future results are not shown. */
-export function getLinkStateTableAt(run, eventSequence, routerId, routerIds) {
-  if (!run || !Number.isInteger(eventSequence) || !routerId) return { status: 'waiting', rows: [], sourceRouterId: routerId };
-  const lastAvailableIndex = Math.min(eventSequence, run.events.length - 1);
-  let startedAt = -1;
-  for (let index = lastAvailableIndex; index >= 0; index -= 1) {
+/** Build a linear-time index of each router's Dijkstra event range. */
+export function buildLinkStateReplayIndex(run) {
+  const ranges = {};
+  if (!run || !Array.isArray(run.events)) return { ranges };
+  for (let index = 0; index < run.events.length; index += 1) {
     const event = run.events[index];
-    if (event?.type === 'link-state.dijkstra.started' && event.details?.sourceRouterId === routerId) {
-      startedAt = index;
-      break;
+    if (event?.type === 'link-state.dijkstra.started') {
+      const routerId = event.details?.sourceRouterId;
+      if (routerId) ranges[routerId] = { startIndex: index, endIndex: run.events.length - 1 };
+    } else if (event?.type === 'link-state.dijkstra.completed') {
+      const routerId = event.details?.sourceRouterId;
+      if (routerId && ranges[routerId]) ranges[routerId].endIndex = index;
     }
   }
-  if (startedAt < 0) return { status: 'waiting', rows: [], sourceRouterId: routerId };
+  return { ranges };
+}
 
+/** Replay only the selected router's Dijkstra range, not the complete event prefix. */
+export function getLinkStateTableAt(run, eventSequence, routerId, routerIds, replayIndex = null) {
+  if (!run || !Number.isInteger(eventSequence) || !routerId) {
+    return { status: 'waiting', rows: [], sourceRouterId: routerId };
+  }
+  const index = replayIndex || buildLinkStateReplayIndex(run);
+  const range = index.ranges?.[routerId];
+  const lastAvailableIndex = Math.min(eventSequence, run.events.length - 1);
+  if (!range || range.startIndex > lastAvailableIndex) {
+    return { status: 'waiting', rows: [], sourceRouterId: routerId };
+  }
+
+  const startedAt = range.startIndex;
   const startedEvent = run.events[startedAt];
   const distances = Object.fromEntries(routerIds.map((id) => [id, Number.POSITIVE_INFINITY]));
   const nextHops = Object.fromEntries(routerIds.map((id) => [id, null]));
@@ -167,10 +182,10 @@ export function getLinkStateTableAt(run, eventSequence, routerId, routerIds) {
   const settled = new Set();
   distances[routerId] = 0;
   let completed = false;
+  const replayEnd = Math.min(lastAvailableIndex, range.endIndex);
 
-  for (let index = startedAt + 1; index <= lastAvailableIndex; index += 1) {
-    const event = run.events[index];
-    if (event.type === 'link-state.dijkstra.started') break;
+  for (let eventIndex = startedAt + 1; eventIndex <= replayEnd; eventIndex += 1) {
+    const event = run.events[eventIndex];
     if (event.type === 'link-state.dijkstra.vertex.settled') {
       const target = event.details?.routerId;
       if (target && Object.hasOwn(distances, target)) {

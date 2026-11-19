@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
   Activity, ArrowLeftRight, CircleHelp, LayoutDashboard,
@@ -7,6 +8,7 @@ import Brand from './Brand.jsx';
 import Badge from '../ui/Badge.jsx';
 import Separator from '../ui/Separator.jsx';
 import IconButton from '../ui/IconButton.jsx';
+import { getActiveProject } from '../../features/topology/model/projectStore.js';
 
 const workspaceLinks = [
   { to: '/lab/overview', label: 'Lab overview', icon: LayoutDashboard, end: true },
@@ -36,6 +38,16 @@ function NavItem({ item, onNavigate, collapsed }) {
 }
 
 export default function Sidebar({ collapsed = false, mobileOpen, onNavigate, onClose }) {
+  const [activeProject, setActiveProject] = useState(getActiveProject);
+  useEffect(() => {
+    const refresh = () => setActiveProject(getActiveProject());
+    window.addEventListener('routelab:project-saved', refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener('routelab:project-saved', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
   const sidebarClass = ['sidebar', collapsed ? 'sidebar-collapsed' : '', mobileOpen ? 'sidebar-open' : ''].filter(Boolean).join(' ');
 
   return (
@@ -62,7 +74,7 @@ export default function Sidebar({ collapsed = false, mobileOpen, onNavigate, onC
           <div className="project-avatar"><Waypoints size={18} strokeWidth={1.7} /></div>
           <div className="project-meta">
             <span className="project-kicker">CURRENT WORKSPACE</span>
-            <strong>No project selected</strong>
+            <strong>{activeProject?.name || 'No project selected'}</strong>
           </div>
           <span className="project-menu-dot" aria-hidden="true">•••</span>
         </div>
@@ -78,9 +90,9 @@ export default function Sidebar({ collapsed = false, mobileOpen, onNavigate, onC
             <div className="learning-icon"><CircleHelp size={18} /></div>
             <div><strong>Learning mode</strong><span>Built for understanding</span></div>
           </div>
-          <div className="sidebar-build" title={collapsed ? 'Release preparation · Version 0.9.3' : undefined}>
+          <div className="sidebar-build" title={collapsed ? 'Release preparation · Version 0.9.4' : undefined}>
             <span><span className="build-dot" /> <span className="sidebar-build-label">Release preparation</span></span>
-            <span>v0.9.3 · Phase 8</span>
+            <span>v0.9.4 · Phase 8</span>
           </div>
         </div>
       </aside>

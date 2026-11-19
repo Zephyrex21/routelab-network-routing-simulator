@@ -4,6 +4,7 @@ import { runDistanceVector, runLinkState } from '../src/engine/algorithms/index.
 import { createTopologyPreset } from '../src/shared/data/presets/topologyPresets.js';
 import { createProject } from '../src/features/topology/model/projectModel.js';
 import {
+  buildLinkStateReplayIndex,
   getCurrentActivity,
   getCurrentSnapshotLabel,
   getDistanceVectorTable,
@@ -182,4 +183,19 @@ test('playback speed presets map to deterministic delays and progress', () => {
   assert.equal(getPlaybackProgress(4, 10), 50);
   assert.equal(getPlaybackProgress(20, 10), 100);
   assert.deepEqual(PLAYBACK_SPEEDS.map((item) => item.value), [0.5, 1, 2, 4, 8]);
+});
+
+
+test('Link State replay index bounds each router lookup to its own Dijkstra range', () => {
+  const run = runLinkState(project);
+  const index = buildLinkStateReplayIndex(run);
+  for (const router of project.routers) {
+    const start = run.events.findIndex((event) => event.type === 'link-state.dijkstra.started'
+      && event.details.sourceRouterId === router.id);
+    const end = run.events.findIndex((event) => event.type === 'link-state.dijkstra.completed'
+      && event.details.sourceRouterId === router.id);
+    assert.deepEqual(index.ranges[router.id], { startIndex: start, endIndex: end });
+    assert.equal(getLinkStateTableAt(run, end, router.id, project.routers.map((item) => item.id), index).status, 'completed');
+    assert.equal(getLinkStateTableAt(run, start - 1, router.id, project.routers.map((item) => item.id), index).status, 'waiting');
+  }
 });
