@@ -23,7 +23,7 @@ test('Simulation Studio exposes playback progress and event selection with acces
   for (const snippet of [
     'role="progressbar"',
     'aria-valuenow={Math.round(eventProgress)}',
-    'aria-valuetext={run ? `Event',
+    'aria-valuetext={run ? cursor < 0 ? \'Before the first event\' : `Event',
     'role="group" aria-label="Simulation events"',
     "aria-current={event.sequence === currentEvent?.sequence ? 'step' : undefined}",
   ]) assert.ok(source.includes(snippet), `Missing accessible playback state: ${snippet}`);
