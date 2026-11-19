@@ -6,13 +6,13 @@
 
 RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 8 — Release Preparation & Canvas Polish.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+> **Current status: Phase 9.1 — Design System Foundation.** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
 
 ## Run locally
 
 ### Requirements
 
-- Node.js 22.12+ recommended (Vite 7 requires Node.js 20.19+ or 22.12+).
+- Node.js 22.12+ recommended (Vite 8 requires Node.js 20.19+ or 22.12+).
 - npm 10+ recommended.
 - `package-lock.json` is committed. Use `npm ci` for clean, reproducible installations and commit an updated lockfile whenever dependencies change.
 
@@ -143,7 +143,8 @@ Projects are stored locally in the current browser under `routelab-project-libra
 - `src/features/packet-explorer/` — per-router next-hop forwarding validation, packet journey playback and topology visualization.
 - `src/features/network-failure/` — isolated topology variants and before/after route outcome analysis.
 - `src/features/comparison/` — cross-algorithm route/table comparison, work profiles and one-link sensitivity experiments.
-- `src/styles/` — design tokens and application styles.
+- `src/styles/` — design tokens, typography, spacing and application styles.
+- `docs/phase-9/` — Phase 9 visual identity, design tokens and UI refinement guidelines.
 - `docs/phase-0/` — product scope, user flows, design system, algorithm specification and validation plan.
 - `docs/phase-1/` — UI foundation implementation and QA notes.
 - `docs/phase-2/` — topology editor implementation notes, manual QA and preset catalogue.
