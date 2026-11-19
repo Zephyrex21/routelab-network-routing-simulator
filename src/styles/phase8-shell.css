@@ -292,3 +292,38 @@ body { font-size: var(--type-body); line-height: 1.58; }
   .public-feature-card, .public-secondary-link { transition: none !important; }
   .public-feature-card:hover { transform: none; }
 }
+
+
+/* Author and source links — shared by the public site and the lab shell. */
+.app-footer {
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 8px;
+  font-size: 11px;
+}
+.app-footer-credit { color: var(--text-tertiary); }
+.app-footer-credit strong,
+.public-footer-meta strong { color: var(--text-secondary); font-weight: 650; }
+.footer-repo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-strong);
+  font-weight: 620;
+  transition: color 160ms ease, transform 160ms ease;
+}
+.footer-repo-link:hover { color: var(--accent); transform: translateY(-1px); }
+.public-footer { flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px; }
+.public-footer-brand,
+.public-footer-meta { display: flex; align-items: center; gap: 18px; }
+.public-footer-brand > span,
+.public-footer-meta > span { color: var(--text-tertiary); font-size: 12px; }
+.public-footer-meta { justify-content: flex-end; flex-wrap: wrap; }
+@media (max-width: 760px) {
+  .app-footer { align-items: flex-start; }
+  .public-footer { align-items: flex-start; }
+  .public-footer-brand,
+  .public-footer-meta { align-items: flex-start; flex-direction: column; gap: 9px; }
+  .public-footer-brand > span { display: inline !important; }
+  .public-footer-meta { width: 100%; }
+}
