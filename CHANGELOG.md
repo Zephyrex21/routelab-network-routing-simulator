@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.5 — Phase 9.1 Design System Foundation
+
+- Added a unified Inter interface typeface with system-font fallbacks and IBM Plex Mono for technical values.
+- Defined shared typography, spacing, radius, content-width and motion tokens.
+- Refined light/dark neutral surfaces, border contrast, blue accent and focus-ring colours.
+- Introduced a shared foundation stylesheet for consistent page headings, body copy, controls, navigation and card typography.
+- Improved responsive content gutters and page-header behaviour.
+- Updated the workspace release label to Phase 9.1 and aligned the browser theme colour with the new neutral palette.
+
+# Changelog
+
 ## 0.9.4 — Project state, persistence and simulation performance
 
 - Added explicit active-project selection so every lab workspace uses the topology opened in Network Studio.
@@ -148,4 +159,5 @@
 
 - Added application navigation, dashboard, reusable UI components and theme switching.
 - Added screen shells for Studio, Simulation, Packet Explorer and Comparison.
+
 
