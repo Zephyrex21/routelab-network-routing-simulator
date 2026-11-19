@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.9.4 — Project state, persistence and simulation performance
+
+- Added explicit active-project selection so every lab workspace uses the topology opened in Network Studio.
+- Prevented an unsaved workspace from silently falling back to an unrelated saved project.
+- Preserved damaged or unsupported project-library data instead of overwriting it on the next save.
+- Replaced silent saved-project eviction with an explicit 30-project limit.
+- Protected the project currently open in Network Studio from accidental deletion.
+- Added bounded router-coordinate validation to project imports and the JSON Schema.
+- Indexed Link State Dijkstra event ranges to reduce repeated event-history scans during playback.
+- Removed the simulation minimap overlay and added a clear no-link state for failure experiments.
+- Added controlled error handling around algorithm-comparison failure experiments.
+- Improved download URL cleanup and exposed the active project name in the workspace sidebar.
+
+# Changelog
+
 ## 0.9.3 — Vite 8 compatibility
 
 - Updated `@vitejs/plugin-react` to 6.3.0 so its Vite peer dependency supports the repository's Vite 8.3.8 installation.
@@ -133,3 +148,4 @@
 
 - Added application navigation, dashboard, reusable UI components and theme switching.
 - Added screen shells for Studio, Simulation, Packet Explorer and Comparison.
+

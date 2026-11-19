@@ -36,8 +36,6 @@
 .simulation-flow-wrap .react-flow__controls { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); box-shadow: var(--shadow-soft); }
 .simulation-flow-wrap .react-flow__controls-button { width: 27px; height: 27px; border-bottom: 1px solid var(--line); background: var(--surface); fill: var(--text-secondary); }
 .simulation-flow-wrap .react-flow__controls-button:hover { background: var(--surface-muted); }
-.simulation-flow-wrap .react-flow__minimap { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); box-shadow: var(--shadow-soft); }
-.simulation-flow-wrap .react-flow__minimap-mask { fill: var(--overlay); }
 .simulation-flow-wrap .react-flow__edge-path { transition: stroke 140ms ease, stroke-width 140ms ease; }
 .simulation-flow-wrap .react-flow__edge.animated path { stroke-dasharray: 7 5; animation: simulation-edge-flow 850ms linear infinite; }
 .simulation-flow-wrap .react-flow__edge-text { font-size: 10px; font-weight: 700; }

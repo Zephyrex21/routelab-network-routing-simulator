@@ -29,7 +29,7 @@ const SPEED_OPTIONS = [
 ];
 
 function getActiveProject() {
-  return getLastProject() || getSavedProjects()[0] || null;
+  return getLastProject();
 }
 
 function PacketEmptyState({ hasSavedProjects }) {

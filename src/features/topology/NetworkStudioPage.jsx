@@ -28,7 +28,8 @@ import {
   createTopologyPreset, topologyPresetOptions,
 } from '../../shared/data/presets/topologyPresets.js';
 import {
-  deleteSavedProject, getLastProject, getSavedProjects, saveProject,
+  activateProject, clearActiveProject, deleteSavedProject, getLastProject,
+  getProjectLibraryStatus, getSavedProjects, saveProject,
 } from './model/projectStore.js';
 
 const nodeTypes = { router: RouterNode };
@@ -54,7 +55,21 @@ function downloadProject(project) {
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  URL.revokeObjectURL(url);
+  // Some browsers begin the download after the click handler returns.
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadLibraryRecoveryBackup(rawContent) {
+  if (typeof rawContent !== 'string') return;
+  const blob = new Blob([rawContent], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'routelab-project-library-recovery-backup.json';
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function NetworkStudioContent() {
@@ -80,6 +95,7 @@ function NetworkStudioContent() {
   const [replaceDialogOpen, setReplaceDialogOpen] = useState(false);
   const [pendingProject, setPendingProject] = useState(null);
   const [savedProjects, setSavedProjects] = useState(() => getSavedProjects());
+  const [libraryRecovery, setLibraryRecovery] = useState(null);
   const [routerLabelDraft, setRouterLabelDraft] = useState('');
   const [linkCostDraft, setLinkCostDraft] = useState('');
   const [importing, setImporting] = useState(false);
@@ -100,9 +116,13 @@ function NetworkStudioContent() {
   const downLinks = edges.length - activeLinks;
 
   const markDirty = useCallback((topologyChanged = false) => {
+    if (!dirty) {
+      const selectionResult = clearActiveProject();
+      if (!selectionResult.ok) notify(selectionResult.message || 'The active saved-project selection could not be cleared.', 'warning');
+    }
     setDirty(true);
     if (topologyChanged) setTopologyRevision((revision) => revision + 1);
-  }, []);
+  }, [dirty, notify]);
 
   const handleNodesChange = useCallback((changes) => {
     onNodesChange(changes);
@@ -129,6 +149,8 @@ function NetworkStudioContent() {
       notify(validation.errors[0] || 'This project could not be loaded.', 'error');
       return false;
     }
+    const selectionResult = persisted ? activateProject(project.projectId) : clearActiveProject();
+    if (!selectionResult.ok) notify(selectionResult.message || 'Active-project selection could not be updated.', 'warning');
     const flow = projectToFlow(project);
     setBaseProject(project);
     setProjectName(project.name);
@@ -347,15 +369,22 @@ function NetworkStudioContent() {
   }, [requestProjectSwitch, notify]);
 
   const openLibrary = useCallback(() => {
+    const status = getProjectLibraryStatus();
+    setLibraryRecovery(status.ok ? null : status);
+    if (!status.ok) notify(status.message, 'error');
     setSavedProjects(getSavedProjects());
     setLibraryOpen(true);
-  }, []);
+  }, [notify]);
 
   const loadFromLibrary = useCallback((project) => {
     requestProjectSwitch(project, `“${project.name}” opened.`, true, true);
   }, [requestProjectSwitch]);
 
   const removeFromLibrary = useCallback((projectId) => {
+    if (baseProject.projectId === projectId) {
+      notify('Switch to another project before deleting the topology currently open in Network Studio.', 'warning');
+      return;
+    }
     const result = deleteSavedProject(projectId);
     if (!result.ok) {
       notify(result.message, 'error');
@@ -363,7 +392,7 @@ function NetworkStudioContent() {
     }
     setSavedProjects(getSavedProjects());
     notify('Saved project removed from this browser.', 'success');
-  }, [notify]);
+  }, [notify, baseProject.projectId]);
 
   const onNodeClick = useCallback((_, node) => {
     setSelected({ type: 'router', id: node.id });
@@ -577,6 +606,19 @@ function NetworkStudioContent() {
       </Dialog>
 
       <Dialog open={libraryOpen} onClose={() => setLibraryOpen(false)} title="Saved projects" description="Projects are stored locally in this browser. Export JSON to keep an external backup.">
+        {libraryRecovery && (
+          <div className="phase2-validation-summary" role="alert">
+            <div>
+              <strong>Saved library needs recovery</strong>
+              <small>{libraryRecovery.message}</small>
+            </div>
+            {typeof libraryRecovery.rawContent === 'string' && (
+              <Button size="sm" variant="secondary" icon={ArrowDownToLine} onClick={() => downloadLibraryRecoveryBackup(libraryRecovery.rawContent)}>
+                Download raw backup
+              </Button>
+            )}
+          </div>
+        )}
         <div className="phase2-library-list">
           {savedProjects.length === 0 ? <div className="phase2-library-empty"><FolderOpen size={22} /><strong>No saved projects yet</strong><span>Use Save project to add your current topology to this list.</span></div> : savedProjects.map((project) => (
             <div className="phase2-library-item" key={project.projectId}>

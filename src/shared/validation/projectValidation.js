@@ -4,6 +4,7 @@ const GENERAL_ROUTER_ID_PATTERN = /^[A-Za-z][A-Za-z0-9_-]{0,15}$/;
 const MAX_ROUTERS = 20;
 const MIN_LINK_COST = 1;
 const MAX_LINK_COST = 999;
+const MAX_COORDINATE = 100000;
 
 export function validateProject(project) {
   const errors = [];
@@ -32,8 +33,15 @@ export function validateProject(project) {
     else if (routerIds.has(router.id)) errors.push(`Duplicate router ID: ${router.id}.`);
     else routerIds.add(router.id);
     if (typeof router.label !== 'string' || !router.label.trim() || router.label.length > 40) errors.push(`${prefix} label must contain 1–40 characters.`);
-    if (!router.position || typeof router.position !== 'object' || Array.isArray(router.position) || !Number.isFinite(router.position.x) || !Number.isFinite(router.position.y)) errors.push(`${prefix} position must contain finite x and y coordinates.`);
-    else checkOnlyKeys(router.position, ['x', 'y'], `${prefix} position`, errors);
+    if (!router.position || typeof router.position !== 'object' || Array.isArray(router.position)
+      || !Number.isFinite(router.position.x) || !Number.isFinite(router.position.y)) {
+      errors.push(`${prefix} position must contain finite x and y coordinates.`);
+    } else {
+      checkOnlyKeys(router.position, ['x', 'y'], `${prefix} position`, errors);
+      if (Math.abs(router.position.x) > MAX_COORDINATE || Math.abs(router.position.y) > MAX_COORDINATE) {
+        errors.push(`${prefix} coordinates must be between -${MAX_COORDINATE} and ${MAX_COORDINATE}.`);
+      }
+    }
   }
 
   const linkIds = new Set();

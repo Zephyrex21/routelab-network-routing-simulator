@@ -12,7 +12,7 @@ import { Input, Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
 import { runRoutingAlgorithm } from '../../engine/algorithms/index.js';
 import { createProject } from '../topology/model/projectModel.js';
-import { getLastProject, getSavedProjects, saveProject } from '../topology/model/projectStore.js';
+import { getLastProject, saveProject } from '../topology/model/projectStore.js';
 import { createPacketRoute } from '../packet-explorer/model/packetRouting.js';
 import PacketTopologyView from '../packet-explorer/components/PacketTopologyView.jsx';
 import { comparePacketRoutes, createLinkExperiment } from './model/failureExperiment.js';
@@ -238,7 +238,9 @@ export default function NetworkFailureLabPage() {
               <Select label="Source router" value={sourceRouterId} onChange={(event) => { setSourceRouterId(event.target.value); clearAnalysis(); }} options={routerOptions} />
               <Select label="Destination router" value={destinationRouterId} onChange={(event) => { setDestinationRouterId(event.target.value); clearAnalysis(); }} options={routerOptions} />
             </div>
-            {!experiment.ok && <div className="failure-validation-hint"><ShieldAlert size={14} /><span>{experiment.message}</span></div>}
+            {!project.links.length
+              ? <div className="failure-validation-hint"><ShieldAlert size={14} /><span>Add at least one link in Network Studio before running a link-failure experiment.</span></div>
+              : !experiment.ok && <div className="failure-validation-hint"><ShieldAlert size={14} /><span>{experiment.message}</span></div>}
             <Button icon={RefreshCw} onClick={handleAnalyse} disabled={!experiment.ok || !project.links.length}>Run before / after analysis</Button>
             <small className="failure-small-note">Both networks are recalculated from algorithm initialization. This is not a timed live-convergence or production router failure simulation.</small>
           </div>

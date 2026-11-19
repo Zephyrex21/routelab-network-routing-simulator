@@ -58,6 +58,12 @@ test('Phase 8 polish stylesheet is loaded after the base styles', async () => {
   assert.match(index, /@import "\.\/phase8-polish\.css";/);
 });
 
+test('simulation visualization no longer renders the obstructive minimap overlay', async () => {
+  const source = await readText('../src/features/simulation/SimulationPage.jsx');
+  assert.ok(!source.includes('MiniMap'), 'Simulation workspace should not render the minimap overlay');
+  assert.match(source, /<Controls showInteractive=\{false\}/);
+});
+
 test('canvas zoom controls remain available after minimap removal', async () => {
   const source = await readText('../src/features/topology/NetworkStudioPage.jsx');
   assert.match(source, /<Controls showInteractive=\{false\} position="bottom-right" \/>/);

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
-  Background, BackgroundVariant, Controls, MiniMap, ReactFlow,
+  Background, BackgroundVariant, Controls, ReactFlow,
 } from '@xyflow/react';
 import PageHeader from '../../components/layout/PageHeader.jsx';
 import Badge from '../../components/ui/Badge.jsx';
@@ -17,8 +17,9 @@ import { runRoutingAlgorithm } from '../../engine/algorithms/index.js';
 import { getLastProject, getSavedProjects } from '../topology/model/projectStore.js';
 import SimulationRouterNode from './components/SimulationRouterNode.jsx';
 import {
-  getCurrentActivity, getCurrentSnapshotLabel, getDistanceVectorTable,
-  getEventFacts, getEventLabel, getLinkStateTableAt, getVisibleEvents,
+  buildLinkStateReplayIndex, getCurrentActivity, getCurrentSnapshotLabel,
+  getDistanceVectorTable, getEventFacts, getEventLabel, getLinkStateTableAt,
+  getVisibleEvents,
 } from './model/simulationViewModel.js';
 import {
   clampEventCursor, getPlaybackDelay, getPlaybackProgress, PLAYBACK_SPEEDS,
@@ -140,12 +141,7 @@ function SimulationCanvas({ project, event, activity, highlightedPath, settledRo
         >
           <Background variant={BackgroundVariant.Dots} gap={19} size={1} color="var(--line-strong)" />
           <Controls showInteractive={false} />
-          <MiniMap
-            pannable
-            zoomable
-            nodeColor={(node) => node.data?.isActive ? 'var(--accent)' : node.data?.isSettled ? 'var(--success)' : 'var(--line-strong)'}
-            maskColor="var(--overlay)"
-          />
+
         </ReactFlow>
       ) : <div className="simulation-flow-empty">No routers in this saved topology.</div>}
       <div className="simulation-canvas-legend">
@@ -263,6 +259,7 @@ export default function SimulationPage() {
 
   const hasProject = Boolean(project);
   const routerIds = useMemo(() => project?.routers.map((router) => router.id) || [], [project]);
+  const linkStateReplayIndex = useMemo(() => buildLinkStateReplayIndex(run), [run]);
   const currentEvent = run && cursor >= 0 ? run.events[cursor] || null : null;
   const activity = useMemo(() => getCurrentActivity(currentEvent), [currentEvent]);
   const currentEventFacts = useMemo(() => getEventFacts(currentEvent), [currentEvent]);
@@ -275,8 +272,8 @@ export default function SimulationPage() {
       const rows = getDistanceVectorTable(run, currentSequence, selectedRouterId);
       return { status: rows ? 'completed' : 'waiting', rows: rows || [] };
     }
-    return getLinkStateTableAt(run, currentSequence, selectedRouterId, routerIds);
-  }, [run, currentSequence, selectedRouterId, algorithm, routerIds]);
+    return getLinkStateTableAt(run, currentSequence, selectedRouterId, routerIds, linkStateReplayIndex);
+  }, [run, currentSequence, selectedRouterId, algorithm, routerIds, linkStateReplayIndex]);
 
   const settledRouterIds = algorithm === 'link-state' ? (tableView.settledRouterIds || []) : [];
   const selectedRoute = tableView.rows?.find((row) => row.destinationRouterId === selectedDestinationId);

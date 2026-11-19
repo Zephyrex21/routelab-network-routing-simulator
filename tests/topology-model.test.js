@@ -258,3 +258,136 @@ test('saving a valid project announces the saved revision for same-tab consumers
     else globalThis.window = previousWindow;
   }
 });
+
+
+test('active project selection follows the project opened from the library', async () => {
+  const { saveProject, activateProject, getActiveProject, getLastProject, getSavedProjects } = await import('../src/features/topology/model/projectStore.js');
+  const previousWindow = globalThis.window;
+  const values = new Map();
+  globalThis.window = { localStorage: {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+  } };
+  try {
+    const first = createTopologyPreset('starter');
+    const second = createTopologyPreset('diamond');
+    assert.equal(saveProject(first).ok, true);
+    assert.equal(saveProject(second).ok, true);
+    assert.equal(getLastProject().projectId, second.projectId);
+    assert.equal(activateProject(first.projectId).ok, true);
+    assert.equal(getActiveProject().projectId, first.projectId);
+    assert.equal(getSavedProjects().length, 2);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
+test('clearing an unsaved active workspace never falls back to another saved project', async () => {
+  const { saveProject, clearActiveProject, getActiveProject, getSavedProjects } = await import('../src/features/topology/model/projectStore.js');
+  const previousWindow = globalThis.window;
+  const values = new Map();
+  globalThis.window = { localStorage: {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+  } };
+  try {
+    assert.equal(saveProject(createTopologyPreset('starter')).ok, true);
+    assert.equal(clearActiveProject().ok, true);
+    assert.equal(getActiveProject(), null);
+    assert.equal(getSavedProjects().length, 1);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
+test('project library limit refuses a 31st project instead of silently evicting an older one', async () => {
+  const { saveProject, getSavedProjects } = await import('../src/features/topology/model/projectStore.js');
+  const previousWindow = globalThis.window;
+  const values = new Map();
+  globalThis.window = { localStorage: {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+  } };
+  try {
+    for (let index = 0; index < 30; index += 1) {
+      assert.equal(saveProject(createProject(`Project ${index + 1}`)).ok, true);
+    }
+    const overflow = saveProject(createProject('Project 31'));
+    assert.equal(overflow.ok, false);
+    assert.match(overflow.message, /library is full/i);
+    assert.equal(getSavedProjects().length, 30);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
+test('corrupted project-library JSON is preserved and cannot be overwritten by save', async () => {
+  const { saveProject, getProjectLibraryStatus } = await import('../src/features/topology/model/projectStore.js');
+  const previousWindow = globalThis.window;
+  const original = '{ this is recoverable but invalid JSON';
+  const values = new Map([['routelab-project-library-v1', original]]);
+  globalThis.window = { localStorage: {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+  } };
+  try {
+    const status = getProjectLibraryStatus();
+    assert.equal(status.ok, false);
+    assert.equal(status.rawContent, original);
+    assert.equal(saveProject(createTopologyPreset('starter')).ok, false);
+    assert.equal(values.get('routelab-project-library-v1'), original);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
+test('unsupported project-library versions are preserved instead of reset', async () => {
+  const { saveProject, getProjectLibraryStatus } = await import('../src/features/topology/model/projectStore.js');
+  const previousWindow = globalThis.window;
+  const original = JSON.stringify({ version: 99, projects: [] });
+  const values = new Map([['routelab-project-library-v1', original]]);
+  globalThis.window = { localStorage: {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+  } };
+  try {
+    assert.equal(getProjectLibraryStatus().ok, false);
+    assert.equal(saveProject(createTopologyPreset('starter')).ok, false);
+    assert.equal(values.get('routelab-project-library-v1'), original);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
+test('deleting the active project selects a remaining valid project', async () => {
+  const { saveProject, activateProject, deleteSavedProject, getActiveProject } = await import('../src/features/topology/model/projectStore.js');
+  const previousWindow = globalThis.window;
+  const values = new Map();
+  globalThis.window = { localStorage: {
+    getItem: (key) => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+  } };
+  try {
+    const first = createTopologyPreset('starter');
+    const second = createTopologyPreset('diamond');
+    assert.equal(saveProject(first).ok, true);
+    assert.equal(saveProject(second).ok, true);
+    assert.equal(activateProject(first.projectId).ok, true);
+    assert.equal(deleteSavedProject(first.projectId).ok, true);
+    assert.equal(getActiveProject().projectId, second.projectId);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
+test('project validation rejects extreme but finite router coordinates', () => {
+  const project = clone(createTopologyPreset('starter'));
+  project.routers[0].position.x = 100001;
+  assert.equal(validateProject(project).valid, false);
+});
