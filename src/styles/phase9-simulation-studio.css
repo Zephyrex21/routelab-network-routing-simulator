@@ -142,3 +142,46 @@
 @media (prefers-reduced-motion: reduce) {
   .simulation-page .simulation-event-row { transition: none; }
 }
+
+
+/* Phase 10.1 — event-by-event learning guidance */
+.simulation-page .simulation-learning-note {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+.simulation-page .simulation-learning-note > strong {
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.simulation-page .simulation-learning-note > p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.65;
+}
+.simulation-page .simulation-learning-note > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.simulation-page .simulation-learning-note > div b {
+  color: var(--accent);
+  white-space: nowrap;
+}
+.simulation-page .simulation-learning-note > div span { color: var(--text-secondary); }
+@media (max-width: 460px) {
+  .simulation-page .simulation-learning-note { padding: 11px 12px; }
+  .simulation-page .simulation-learning-note > p { font-size: 10px; }
+}

@@ -49,3 +49,14 @@ test('Phase 9.3 simulation styles are scoped and responsive, with reduced-motion
     assert.ok(styles.includes(snippet), `Missing simulation responsive rule: ${snippet}`);
   }
 });
+
+
+test('Simulation Studio renders an accessible event-by-event learning explanation', async () => {
+  const source = await readText('../src/features/simulation/SimulationPage.jsx');
+  assert.ok(source.includes('getEventExplanation'));
+  assert.ok(source.includes('aria-label="Algorithm explanation"'));
+  assert.ok(source.includes('UNDERSTAND THIS STEP'));
+  assert.ok(source.includes('currentEventExplanation.takeaway'));
+  const styles = await readText('../src/styles/phase9-simulation-studio.css');
+  assert.ok(styles.includes('.simulation-learning-note'));
+});

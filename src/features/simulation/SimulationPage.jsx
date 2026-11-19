@@ -18,7 +18,7 @@ import { getActiveProject, getSavedProjects } from '../topology/model/projectSto
 import SimulationRouterNode from './components/SimulationRouterNode.jsx';
 import {
   buildLinkStateReplayIndex, getCurrentActivity, getCurrentSnapshotLabel,
-  getDistanceVectorTable, getEventFacts, getEventLabel, getLinkStateTableAt,
+  getDistanceVectorTable, getEventExplanation, getEventFacts, getEventLabel, getLinkStateTableAt,
   getVisibleEvents,
 } from './model/simulationViewModel.js';
 import {
@@ -260,6 +260,7 @@ export default function SimulationPage() {
   const currentEvent = run && cursor >= 0 ? run.events[cursor] || null : null;
   const activity = useMemo(() => getCurrentActivity(currentEvent), [currentEvent]);
   const currentEventFacts = useMemo(() => getEventFacts(currentEvent), [currentEvent]);
+  const currentEventExplanation = useMemo(() => getEventExplanation(currentEvent), [currentEvent]);
   const currentSequence = currentEvent?.sequence ?? -1;
   const snapshotLabel = run && currentSequence >= 0 ? getCurrentSnapshotLabel(run, currentSequence) : 'Waiting for first snapshot';
 
@@ -510,6 +511,12 @@ export default function SimulationPage() {
             <span className="simulation-activity-indicator"><Radio size={15} /></span>
             <div><span className="eyebrow muted">CURRENT EVENT · {currentEvent ? `#${String(currentEvent.sequence + 1).padStart(3, '0')}` : 'NOT STARTED'}</span><strong>{activity.title}</strong><p>{activity.description}</p>
               {currentEventFacts.length > 0 && <div className="simulation-event-facts">{currentEventFacts.map((fact) => <span key={`${fact.label}-${fact.value}`}><small>{fact.label}</small><b>{fact.value}</b></span>)}</div>}
+              <section className="simulation-learning-note" aria-label="Algorithm explanation">
+                <span className="eyebrow muted">UNDERSTAND THIS STEP</span>
+                <strong>{currentEventExplanation.title}</strong>
+                <p>{currentEventExplanation.explanation}</p>
+                <div><b>Key idea</b><span>{currentEventExplanation.takeaway}</span></div>
+              </section>
             </div>
           </div>
           <div className="simulation-progress-row"><div><span>Execution progress</span><strong>{run ? `${Math.max(0, cursor + 1).toLocaleString()} / ${run.events.length.toLocaleString()}` : '— / —'}</strong></div><div className="simulation-progress-track" role="progressbar" aria-label="Simulation execution progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(eventProgress)}><span style={{ width: `${eventProgress}%` }} /></div></div>
