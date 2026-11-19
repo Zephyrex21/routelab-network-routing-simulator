@@ -202,24 +202,7 @@ export default function ComparePage() {
   }, []);
 
   useEffect(() => {
-    const handleExportComparisonReport = () => {
-    if (!comparison || !comparisonIsCurrent) return;
-    try {
-      const html = createComparisonReportHtml({
-        project,
-        comparison,
-        sourceRouterId,
-        destinationRouterId,
-        failureResult: failureIsCurrent ? failureResult : null,
-      });
-      const result = openPrintableReport(html);
-      notify(result.message, result.ok ? 'success' : 'warning');
-    } catch (error) {
-      notify(error instanceof Error ? error.message : 'The comparison report could not be generated.', 'error');
-    }
-  };
-
-  if (!project) return;
+    if (!project) return;
     const ids = project.routers.map((router) => router.id);
     if (!ids.includes(sourceRouterId)) setSourceRouterId(ids[0] || '');
     if (!ids.includes(destinationRouterId)) setDestinationRouterId(ids[1] || ids[0] || '');
@@ -290,6 +273,23 @@ export default function ComparePage() {
 
   const comparisonIsCurrent = comparison?.projectId === project.projectId && comparison?.topologyRevision === project.topologyRevision;
   const failureIsCurrent = failureResult?.projectId === project.projectId && failureResult?.topologyRevision === project.topologyRevision;
+
+  const handleExportComparisonReport = () => {
+    if (!comparison || !comparisonIsCurrent) return;
+    try {
+      const html = createComparisonReportHtml({
+        project,
+        comparison,
+        sourceRouterId,
+        destinationRouterId,
+        failureResult: failureIsCurrent ? failureResult : null,
+      });
+      const result = openPrintableReport(html);
+      notify(result.message, result.ok ? 'success' : 'warning');
+    } catch (error) {
+      notify(error instanceof Error ? error.message : 'The comparison report could not be generated.', 'error');
+    }
+  };
   const routerCount = project.routers.length;
   const activeLinks = project.links.filter((link) => link.status === 'up').length;
 
