@@ -174,9 +174,16 @@ export default function PublicHomePage() {
       </main>
 
       <footer className="public-footer">
-        <Link to="/" className="public-brand"><Brand /></Link>
-        <span>Computer Networks learning laboratory</span>
-        <span>Routing, made visible.</span>
+        <div className="public-footer-brand">
+          <Link to="/" className="public-brand"><Brand /></Link>
+          <span>Computer Networks learning laboratory</span>
+        </div>
+        <div className="public-footer-meta">
+          <span>Designed &amp; developed by <strong>Saurabh Raj Shekhar</strong></span>
+          <a className="footer-repo-link" href="https://github.com/Zephyrex21/routelab-network-routing-simulator" target="_blank" rel="noreferrer">
+            View source on GitHub <ArrowUpRight size={14} />
+          </a>
+        </div>
       </footer>
     </div>
   );

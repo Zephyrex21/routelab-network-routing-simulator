@@ -105,7 +105,10 @@ export default function AppShell() {
         </main>
         <footer className="app-footer">
           <span>RouteLab <span className="footer-dot">·</span> Computer Networks</span>
-          <span>Routing, made visible.</span>
+          <span className="app-footer-credit">Designed &amp; developed by <strong>Saurabh Raj Shekhar</strong></span>
+          <a className="footer-repo-link" href="https://github.com/Zephyrex21/routelab-network-routing-simulator" target="_blank" rel="noreferrer">
+            GitHub repository <span aria-hidden="true">↗</span>
+          </a>
         </footer>
       </div>
     </div>
