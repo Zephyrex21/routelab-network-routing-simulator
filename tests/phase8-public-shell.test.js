@@ -63,6 +63,6 @@ test('lab overview and workspace navigation use the new Phase 8 routes and statu
   const overview = await readText('../src/features/dashboard/OverviewPage.jsx');
   const topbar = await readText('../src/components/layout/Topbar.jsx');
   assert.match(sidebar, /\/lab\/overview/);
-  assert.match(overview, /Phase 9\.2/);
-  assert.match(topbar, /Phase 9\.2 · Network Studio refinement/);
+  assert.match(overview, /Phase 9\.3/);
+  assert.match(topbar, /Phase 9\.3 · UX and interaction polish/);
 });

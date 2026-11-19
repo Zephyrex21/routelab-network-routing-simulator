@@ -1,0 +1,144 @@
+/* Phase 9.3 — Simulation Studio readability, playback and responsive interaction polish. */
+.simulation-page .page-header { margin-bottom: 21px; }
+.simulation-page .simulation-project-strip,
+.simulation-page .simulation-control-bar,
+.simulation-page .simulation-canvas-card,
+.simulation-page .simulation-table-card,
+.simulation-page .simulation-timeline-card { border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+.simulation-page .simulation-project-strip { min-height: 76px; padding: 14px 17px; }
+.simulation-page .simulation-project-icon { width: 42px; height: 42px; border-radius: 12px; }
+.simulation-page .simulation-project-identity .eyebrow { font-size: 10px; }
+.simulation-page .simulation-project-identity strong { max-width: 430px; font-size: 14px; font-weight: 680; letter-spacing: -.02em; }
+.simulation-page .simulation-project-identity small { font-size: 11px; }
+.simulation-page .simulation-studio-link { font-size: 12px; }
+.simulation-page .simulation-project-actions .badge { min-height: 28px; font-size: 11px; }
+.simulation-page .simulation-control-bar { align-items: center; min-height: 88px; padding: 16px 18px; }
+.simulation-page .simulation-algorithm-control { align-items: center; gap: 16px; }
+.simulation-page .simulation-algorithm-control > .field { width: min(245px, 42%); }
+.simulation-page .simulation-algorithm-control .field label { font-size: 12px; }
+.simulation-page .simulation-algorithm-control .select-input,
+.simulation-page .simulation-playback-controls .select-input { min-height: 42px; font-size: 13px; }
+.simulation-page .simulation-algorithm-summary { gap: 5px; }
+.simulation-page .simulation-algorithm-summary strong { font-size: 13px; }
+.simulation-page .simulation-algorithm-summary span { font-size: 11px; }
+.simulation-page .simulation-playback-controls { align-items: center; gap: 7px; }
+.simulation-page .simulation-playback-controls .button { min-height: 40px; font-size: 12px; }
+.simulation-page .simulation-playback-controls > .field { width: 88px; }
+.simulation-page .simulation-playback-controls > .field label { font-size: 11px; }
+.simulation-page .simulation-shortcuts { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 17px; margin: -2px 0 13px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--text-secondary); background: var(--surface-soft); font-size: 11px; }
+.simulation-page .simulation-shortcuts-title { color: var(--text-tertiary); font-size: 9px; font-weight: 750; letter-spacing: .1em; }
+.simulation-page .simulation-shortcuts > span:not(.simulation-shortcuts-title) { display: inline-flex; align-items: center; gap: 5px; }
+.simulation-page .simulation-shortcuts kbd { display: inline-grid; min-width: 23px; min-height: 22px; place-items: center; padding: 2px 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 6px; color: var(--text); background: var(--surface); font-family: var(--font-mono); font-size: 10px; line-height: 1; }
+.simulation-page .simulation-description-strip { gap: 11px; margin-bottom: 15px; padding: 13px 15px; border-radius: 11px; }
+.simulation-page .simulation-description-strip p { font-size: 12px; line-height: 1.7; }
+.simulation-page .simulation-error-banner { padding: 13px 15px; font-size: 12px; }
+.simulation-page .simulation-workspace-grid { grid-template-columns: minmax(0, 1.2fr) minmax(370px, .9fr); gap: 15px; }
+.simulation-page .simulation-card-heading { min-height: 74px; padding: 15px 18px; }
+.simulation-page .simulation-card-heading h2 { font-size: 17px; letter-spacing: -.025em; }
+.simulation-page .simulation-card-heading .eyebrow { font-size: 10px; }
+.simulation-page .simulation-card-heading .badge { min-height: 27px; font-size: 11px; }
+.simulation-page .simulation-flow-wrap { height: clamp(410px, 48svh, 540px); min-height: 380px; }
+.simulation-page .simulation-flow-wrap .react-flow__controls { border-radius: 10px; }
+.simulation-page .simulation-flow-wrap .react-flow__controls-button { width: 34px; height: 34px; }
+.simulation-page .simulation-flow-wrap .react-flow__edge-text { font-size: 12px; }
+.simulation-page .simulation-router-node { min-width: 112px; min-height: 82px; gap: 4px; padding: 9px 12px; border-radius: 14px; }
+.simulation-page .simulation-router-icon { width: 31px; height: 31px; border-radius: 9px; }
+.simulation-page .simulation-router-label { max-width: 145px; font-size: 12px; }
+.simulation-page .simulation-router-id { font-size: 10px; }
+.simulation-page .simulation-router-state { top: -10px; right: -10px; padding: 4px 6px; font-size: 8px; }
+.simulation-page .simulation-canvas-legend { right: 13px; bottom: 13px; left: 13px; gap: 9px 15px; padding: 9px 11px; border-radius: 9px; font-size: 10px; }
+.simulation-page .simulation-activity-callout { min-height: 100px; gap: 12px; padding: 16px 18px 13px; }
+.simulation-page .simulation-activity-indicator { width: 36px; height: 36px; border-radius: 10px; }
+.simulation-page .simulation-activity-callout .eyebrow { font-size: 10px; }
+.simulation-page .simulation-activity-callout strong { font-size: 13px; }
+.simulation-page .simulation-activity-callout p { font-size: 11px; line-height: 1.65; }
+.simulation-page .simulation-event-facts { gap: 7px; margin-top: 9px; }
+.simulation-page .simulation-event-facts > span { min-width: 75px; gap: 4px; padding: 7px 9px; border-radius: 8px; }
+.simulation-page .simulation-event-facts small { font-size: 9px; }
+.simulation-page .simulation-event-facts b { font-size: 11px; }
+.simulation-page .simulation-progress-row { grid-template-columns: minmax(140px, auto) minmax(90px, 1fr); gap: 18px; padding: 0 18px 16px; }
+.simulation-page .simulation-progress-row span { font-size: 10px; }
+.simulation-page .simulation-progress-row strong { font-size: 12px; }
+.simulation-page .simulation-progress-track { height: 7px; }
+.simulation-page .simulation-table-controls { gap: 11px; padding: 15px 16px; }
+.simulation-page .simulation-table-controls .field label { font-size: 11px; }
+.simulation-page .simulation-table-controls .select-input { min-height: 40px; font-size: 12px; }
+.simulation-page .simulation-table-scroll { max-height: 350px; }
+.simulation-page .simulation-route-table th { padding: 11px 13px; font-size: 10px; }
+.simulation-page .simulation-route-table td { padding: 11px 13px; font-size: 12px; }
+.simulation-page .simulation-route-table td strong { font-size: 13px; }
+.simulation-page .simulation-route-table .badge { min-height: 23px; padding: 3px 7px; font-size: 10px; }
+.simulation-page .simulation-selected-route { gap: 11px; margin: auto 15px 15px; padding: 13px; border-radius: 11px; }
+.simulation-page .simulation-selected-route > div:first-child strong { font-size: 12px; }
+.simulation-page .selected-route-summary { gap: 18px; font-size: 11px; }
+.simulation-page .simulation-route-path { gap: 8px; font-size: 11px; }
+.simulation-page .simulation-table-empty { padding: 27px; }
+.simulation-page .simulation-table-empty strong { font-size: 13px; }
+.simulation-page .simulation-table-empty p { max-width: 290px; font-size: 11px; }
+.simulation-page .simulation-table-empty small { font-size: 10px; }
+.simulation-page .simulation-metrics-intro { align-items: flex-start; flex-direction: column; gap: 4px; margin: 18px 0 10px; }
+.simulation-page .simulation-metrics-intro .eyebrow { font-size: 10px; }
+.simulation-page .simulation-metrics-intro small { font-size: 11px; }
+.simulation-page .simulation-metrics-grid { gap: 11px; }
+.simulation-page .simulation-metric { min-height: 104px; gap: 6px; padding: 14px 16px; border-radius: 13px; }
+.simulation-page .simulation-metric > span { font-size: 10px; letter-spacing: .07em; }
+.simulation-page .simulation-metric strong { font-size: 24px; }
+.simulation-page .simulation-metric small { font-size: 10px; }
+.simulation-page .simulation-timeline-card { margin-top: 15px; }
+.simulation-page .simulation-timeline-meta { gap: 10px; font-size: 11px; }
+.simulation-page .simulation-timeline-scrubber { padding: 16px 18px 12px; }
+.simulation-page .simulation-timeline-scrubber input { height: 7px; }
+.simulation-page .simulation-timeline-scrubber > div { margin-top: 9px; font-size: 10px; }
+.simulation-page .simulation-event-list { max-height: 440px; padding: 7px 11px; }
+.simulation-page .simulation-event-row { min-height: 60px; gap: 12px; padding: 10px 11px; border-radius: 9px; }
+.simulation-page .simulation-event-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.simulation-page .simulation-event-sequence { width: 38px; font-size: 11px; }
+.simulation-page .simulation-event-content { gap: 4px; }
+.simulation-page .simulation-event-content strong { font-size: 12px; }
+.simulation-page .simulation-event-content small { font-size: 10px; }
+.simulation-page .simulation-event-row > .badge { min-width: 52px; font-size: 10px; }
+.simulation-page .simulation-event-empty { min-height: 145px; gap: 11px; font-size: 12px; }
+.simulation-page .simulation-timeline-footer { padding: 12px 16px; font-size: 10px; line-height: 1.55; }
+.simulation-page .simulation-method-note { margin-top: 15px; padding: 14px 16px; border-radius: 11px; }
+.simulation-page .simulation-method-note p { font-size: 11px; }
+
+@media (max-width: 1180px) {
+  .simulation-page .simulation-control-bar { align-items: stretch; }
+  .simulation-page .simulation-workspace-grid { grid-template-columns: minmax(0, 1fr); }
+  .simulation-page .simulation-table-scroll { max-height: 320px; }
+}
+@media (max-width: 760px) {
+  .simulation-page .simulation-project-strip { padding: 13px; }
+  .simulation-page .simulation-project-identity strong { max-width: 100%; }
+  .simulation-page .simulation-algorithm-control { align-items: stretch; }
+  .simulation-page .simulation-algorithm-control > .field { width: 100%; }
+  .simulation-page .simulation-playback-controls { justify-content: flex-start; }
+  .simulation-page .simulation-shortcuts { gap: 8px 11px; padding: 9px 10px; }
+  .simulation-page .simulation-shortcuts-title { width: 100%; }
+  .simulation-page .simulation-flow-wrap { height: 390px; }
+  .simulation-page .simulation-canvas-legend { gap: 8px 11px; }
+  .simulation-page .simulation-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .simulation-page .simulation-event-list { max-height: 390px; }
+}
+@media (max-width: 460px) {
+  .simulation-page .simulation-project-actions { align-items: flex-start; flex-wrap: wrap; gap: 9px 13px; }
+  .simulation-page .simulation-playback-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .simulation-page .simulation-playback-controls .button { justify-content: center; }
+  .simulation-page .simulation-playback-controls > .field { width: 100%; grid-column: 1 / -1; }
+  .simulation-page .simulation-shortcuts > span:not(.simulation-shortcuts-title) { gap: 4px; font-size: 10px; }
+  .simulation-page .simulation-flow-wrap { height: 340px; }
+  .simulation-page .simulation-router-node { min-width: 96px; min-height: 74px; padding: 7px 9px; }
+  .simulation-page .simulation-router-label { max-width: 115px; font-size: 10px; }
+  .simulation-page .simulation-router-id { font-size: 9px; }
+  .simulation-page .simulation-canvas-legend { right: 8px; bottom: 8px; left: 8px; padding: 7px 8px; font-size: 9px; }
+  .simulation-page .simulation-card-heading { min-height: 64px; padding: 12px 13px; }
+  .simulation-page .simulation-card-heading h2 { font-size: 15px; }
+  .simulation-page .simulation-table-controls { grid-template-columns: 1fr; }
+  .simulation-page .simulation-metric { min-height: 92px; padding: 11px; }
+  .simulation-page .simulation-metric strong { font-size: 20px; }
+  .simulation-page .simulation-event-row { gap: 8px; padding: 9px 7px; }
+  .simulation-page .simulation-event-content small { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .simulation-page .simulation-event-row { transition: none; }
+}
