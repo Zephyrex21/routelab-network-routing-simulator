@@ -165,7 +165,7 @@ function RoutingTable({ algorithm, rows, routerId, setRouterId, destinationId, s
       {rows?.length ? (
         <>
           <div className="simulation-table-scroll">
-            <table className="simulation-route-table">
+            <table className="simulation-route-table" aria-label={`Routing table for ${routerId}`}>
               <thead><tr><th>Destination</th><th>Next hop</th><th>Cost</th><th>State</th></tr></thead>
               <tbody>
                 {rows.map((row) => (
@@ -222,12 +222,13 @@ function EventTimeline({ run, cursor, onSeek, currentEvent, isPlaying }) {
           disabled={!canSeek}
           onChange={(event) => onSeek(Number(event.target.value))}
           aria-label="Simulation event position"
+          aria-valuetext={run ? `Event ${Math.max(0, cursor + 1)} of ${run.events.length}` : 'No simulation events'}
         />
         <div><span>Start</span><span>{run ? `${run.events.length.toLocaleString()} total events` : 'Run an algorithm to create a timeline'}</span><span>End</span></div>
       </div>
-      <div className="simulation-event-list" aria-live="polite">
+      <div className="simulation-event-list" role="group" aria-label="Simulation events">
         {visibleEvents.length ? visibleEvents.map((event) => (
-          <button type="button" key={event.sequence} className={`simulation-event-row ${event.sequence === currentEvent?.sequence ? 'event-current' : ''}`} onClick={() => onSeek(event.sequence)}>
+          <button type="button" key={event.sequence} className={`simulation-event-row ${event.sequence === currentEvent?.sequence ? 'event-current' : ''}`} aria-current={event.sequence === currentEvent?.sequence ? 'step' : undefined} onClick={() => onSeek(event.sequence)}>
             <span className="simulation-event-sequence">{String(event.sequence + 1).padStart(3, '0')}</span>
             <span className="simulation-event-content"><strong>{getEventLabel(event.type)}</strong><small>{event.message}</small></span>
             <Badge tone={getEventTone(event)}>{event.actorRouterId || 'System'}</Badge>
@@ -362,7 +363,7 @@ export default function SimulationPage() {
     setRunError('');
   };
 
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
     if (!run) {
       handleRun();
       return;
@@ -373,15 +374,15 @@ export default function SimulationPage() {
     }
     if (isAtEnd || cursor < 0) setCursor(0);
     setIsPlaying(run.events.length > 1);
-  };
+  }, [run, isAtEnd, cursor, handleRun]);
 
-  const handleStep = (direction) => {
+  const handleStep = useCallback((direction) => {
     if (!run) return;
     setIsPlaying(false);
     setCursor((current) => clampEventCursor(current + direction, run.events.length));
-  };
+  }, [run]);
 
-  const handleSeek = (sequence) => {
+  const handleSeek = useCallback((sequence) => {
     if (!run) return;
     setIsPlaying(false);
     if (sequence < 0) {
@@ -390,12 +391,43 @@ export default function SimulationPage() {
     }
     const eventIndex = run.events.findIndex((event) => event.sequence === sequence);
     if (eventIndex >= 0) setCursor(eventIndex);
-  };
+  }, [run]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setIsPlaying(false);
     setCursor(-1);
-  };
+  }, []);
+
+  useEffect(() => {
+    const handlePlaybackShortcut = (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.isContentEditable || target?.closest('input, textarea, select, button, a, [role="button"], [role="slider"], [contenteditable="true"], [role="textbox"]')) return;
+
+      if (event.key === ' ' || event.key === 'Spacebar') {
+        event.preventDefault();
+        handlePlayPause();
+      } else if (event.key === 'ArrowLeft' && run) {
+        event.preventDefault();
+        handleStep(-1);
+      } else if (event.key === 'ArrowRight' && run) {
+        event.preventDefault();
+        handleStep(1);
+      } else if (event.key === 'Home' && run?.events.length) {
+        event.preventDefault();
+        handleSeek(run.events[0].sequence);
+      } else if (event.key === 'End' && run?.events.length) {
+        event.preventDefault();
+        handleSeek(run.events[run.events.length - 1].sequence);
+      } else if (event.key.toLowerCase() === 'r' && run) {
+        event.preventDefault();
+        handleReset();
+      }
+    };
+
+    window.addEventListener('keydown', handlePlaybackShortcut);
+    return () => window.removeEventListener('keydown', handlePlaybackShortcut);
+  }, [handlePlayPause, handleStep, handleSeek, handleReset, run]);
 
   if (!hasProject) {
     return (
@@ -448,6 +480,14 @@ export default function SimulationPage() {
         </div>
       </div>
 
+      <div className="simulation-shortcuts" aria-label="Keyboard shortcuts">
+        <span className="simulation-shortcuts-title">KEYBOARD SHORTCUTS</span>
+        <span><kbd>Space</kbd> Play / pause</span>
+        <span><kbd>←</kbd><kbd>→</kbd> Step</span>
+        <span><kbd>Home</kbd><kbd>End</kbd> First / last event</span>
+        <span><kbd>R</kbd> Reset</span>
+      </div>
+
       <div className="simulation-description-strip"><Sparkles size={14} /><p>{algorithmDescription}</p></div>
 
       {runError && <div className="simulation-error-banner" role="alert"><strong>Simulation error</strong><span>{runError}</span></div>}
@@ -472,7 +512,7 @@ export default function SimulationPage() {
               {currentEventFacts.length > 0 && <div className="simulation-event-facts">{currentEventFacts.map((fact) => <span key={`${fact.label}-${fact.value}`}><small>{fact.label}</small><b>{fact.value}</b></span>)}</div>}
             </div>
           </div>
-          <div className="simulation-progress-row"><div><span>Execution progress</span><strong>{run ? `${Math.max(0, cursor + 1).toLocaleString()} / ${run.events.length.toLocaleString()}` : '— / —'}</strong></div><div className="simulation-progress-track"><span style={{ width: `${eventProgress}%` }} /></div></div>
+          <div className="simulation-progress-row"><div><span>Execution progress</span><strong>{run ? `${Math.max(0, cursor + 1).toLocaleString()} / ${run.events.length.toLocaleString()}` : '— / —'}</strong></div><div className="simulation-progress-track" role="progressbar" aria-label="Simulation execution progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(eventProgress)}><span style={{ width: `${eventProgress}%` }} /></div></div>
         </Card>
 
         <RoutingTable
