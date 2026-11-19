@@ -222,7 +222,7 @@ function EventTimeline({ run, cursor, onSeek, currentEvent, isPlaying }) {
           disabled={!canSeek}
           onChange={(event) => onSeek(Number(event.target.value))}
           aria-label="Simulation event position"
-          aria-valuetext={run ? `Event ${Math.max(0, cursor + 1)} of ${run.events.length}` : 'No simulation events'}
+          aria-valuetext={run ? cursor < 0 ? 'Before the first event' : `Event ${cursor + 1} of ${run.events.length}` : 'No simulation events'}
         />
         <div><span>Start</span><span>{run ? `${run.events.length.toLocaleString()} total events` : 'Run an algorithm to create a timeline'}</span><span>End</span></div>
       </div>
@@ -402,9 +402,9 @@ export default function SimulationPage() {
     const handlePlaybackShortcut = (event) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       const target = event.target instanceof HTMLElement ? event.target : null;
-      if (target?.isContentEditable || target?.closest('input, textarea, select, button, a, [role="button"], [role="slider"], [contenteditable="true"], [role="textbox"]')) return;
+      if (target?.isContentEditable || target?.closest('input, textarea, select, button, a, [role="button"], [role="slider"], [contenteditable="true"], [role="textbox"], [role="dialog"]')) return;
 
-      if (event.key === ' ' || event.key === 'Spacebar') {
+      if ((event.key === ' ' || event.key === 'Spacebar') && project) {
         event.preventDefault();
         handlePlayPause();
       } else if (event.key === 'ArrowLeft' && run) {
@@ -427,7 +427,7 @@ export default function SimulationPage() {
 
     window.addEventListener('keydown', handlePlaybackShortcut);
     return () => window.removeEventListener('keydown', handlePlaybackShortcut);
-  }, [handlePlayPause, handleStep, handleSeek, handleReset, run]);
+  }, [handlePlayPause, handleStep, handleSeek, handleReset, run, project]);
 
   if (!hasProject) {
     return (
