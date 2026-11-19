@@ -89,7 +89,7 @@ export default function PublicHomePage() {
               <div className="public-window-bar">
                 <div className="public-window-dots"><i /><i /><i /></div>
                 <span>ROUTELAB / NETWORK STUDIO</span>
-                <Badge tone="subtle">Interactive preview</Badge>
+                <Badge tone="subtle">Animated preview</Badge>
               </div>
               <div className="public-window-canvas">
                 <NetworkIllustration />

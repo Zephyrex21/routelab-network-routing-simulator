@@ -10,7 +10,7 @@ import Button from '../../components/ui/Button.jsx';
 import { Card } from '../../components/ui/Card.jsx';
 import { Input, Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
-import { getLastProject } from '../topology/model/projectStore.js';
+import { getActiveProject } from '../topology/model/projectStore.js';
 import {
   getPairComparison,
   getRoutingTableComparison,
@@ -24,10 +24,6 @@ const OPERATION_OPTIONS = [
   { value: 'up', label: 'Enable link' },
   { value: 'cost', label: 'Change link cost' },
 ];
-
-function getActiveProject() {
-  return getLastProject() || getSavedProjects()[0] || null;
-}
 
 function MetricValue({ value }) {
   return <strong className="comparison-metric-value">{Number(value || 0).toLocaleString()}</strong>;

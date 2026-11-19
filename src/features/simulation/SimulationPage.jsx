@@ -14,7 +14,7 @@ import { Card } from '../../components/ui/Card.jsx';
 import { Select } from '../../components/ui/Field.jsx';
 import { useToast } from '../../components/ui/ToastProvider.jsx';
 import { runRoutingAlgorithm } from '../../engine/algorithms/index.js';
-import { getLastProject, getSavedProjects } from '../topology/model/projectStore.js';
+import { getActiveProject, getSavedProjects } from '../topology/model/projectStore.js';
 import SimulationRouterNode from './components/SimulationRouterNode.jsx';
 import {
   buildLinkStateReplayIndex, getCurrentActivity, getCurrentSnapshotLabel,
@@ -32,10 +32,6 @@ const ALGORITHM_OPTIONS = [
   { value: 'link-state', label: 'Link State' },
 ];
 const EVENT_LIMIT = 42;
-
-function getCurrentSavedProject() {
-  return getLastProject() || getSavedProjects()[0] || null;
-}
 
 function formatCount(value) {
   return Number.isFinite(value) ? new Intl.NumberFormat().format(value) : '—';
@@ -247,7 +243,7 @@ function EventTimeline({ run, cursor, onSeek, currentEvent, isPlaying }) {
 
 export default function SimulationPage() {
   const { notify } = useToast();
-  const [project, setProject] = useState(getCurrentSavedProject);
+  const [project, setProject] = useState(getActiveProject);
   const [algorithm, setAlgorithm] = useState('distance-vector');
   const [run, setRun] = useState(null);
   const [cursor, setCursor] = useState(-1);
@@ -296,7 +292,7 @@ export default function SimulationPage() {
 
   useEffect(() => {
     const syncProject = () => {
-      const nextProject = getCurrentSavedProject();
+      const nextProject = getActiveProject();
       if (!nextProject) {
         setProject(null);
         setRun(null);
