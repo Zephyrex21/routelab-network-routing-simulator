@@ -190,6 +190,7 @@ body { font-size: var(--type-body); line-height: 1.58; }
   .public-section-heading > p { max-width: 690px; }
 }
 @media (max-width: 760px) {
+  .main-column { margin-left: 0; }
   .sidebar { width: min(300px, calc(100vw - 52px)); }
   .sidebar.sidebar-collapsed { width: min(300px, calc(100vw - 52px)); }
   .sidebar-collapsed .sidebar-brand-row { justify-content: space-between; padding: 0 9px; }

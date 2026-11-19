@@ -6,7 +6,7 @@
 
 RouteLab is an educational Computer Networks project built in controlled phases. The current release combines a public product homepage, a dedicated interactive lab workspace with collapsible navigation, a responsive typography system, an interactive network topology editor, tested routing algorithms, a replayable Simulation Studio, a hop-by-hop Packet Explorer, a controlled Network Failure Lab and a live cross-algorithm Comparison Lab.
 
-> **Current status: Phase 9.1 — Design System Foundation (v0.9.6).** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
+> **Current status: Phase 9.4 — Quality & Testing Hardening (v0.9.6).** RouteLab now includes the interactive topology editor, tested Distance Vector and Link State algorithms, a replayable Simulation Studio, validated hop-by-hop packet forwarding, isolated network-change experiments, live comparison of route costs, reachability, selected paths, routing tables and algorithm-specific work metrics, plus Phase 7 accessibility, responsive, dependency and dev-server security hardening.
 
 ## Live demo
 
@@ -32,7 +32,10 @@ Open the local URL printed by Vite (the default is `http://localhost:5173`).
 ### Tests and production build
 
 ```bash
+npm run lint
 npm test
+npm run test:e2e:install
+npm run test:e2e
 npm run test:engine
 npm run test:simulation
 npm run test:packet
@@ -43,7 +46,7 @@ npm run audit
 npm run preview
 ```
 
-`npm test` runs the topology-model, UI regression, routing-engine, simulation view-model/controller, packet-forwarding, failure-experiment and cross-algorithm comparison tests using Node's built-in test runner, including Vite SSR workspace-render regressions for missing active-project selections. `npm run test:engine` runs only the routing-engine suite; `npm run test:simulation` runs only the Phase 4 simulation suite; `npm run test:packet` and `npm run test:failure` run the Phase 5 feature suites; `npm run test:comparison` runs the Phase 6 comparison suite. `npm run audit` runs the high-severity npm audit gate after dependency installation. `npm run check` runs all tests and the Vite production build; `npm run check:release` runs tests, build and the npm audit gate in one command.
+`npm run lint` runs pinned ESLint 10.15.0 core static checks across application JavaScript/JSX, tests and scripts. `npm test` runs the topology-model, UI regression, routing-engine, simulation view-model/controller, packet-forwarding, failure-experiment and cross-algorithm comparison tests using Node's built-in test runner, including Vite SSR workspace-render regressions for missing active-project selections. `npm run test:e2e:install` installs the pinned Playwright 1.65.1 Chromium browser once per development machine; `npm run test:e2e` builds the app if needed, serves the production bundle, and runs real-browser smoke checks across every workspace, core controls, reduced-motion mode, runtime errors and a 390px mobile viewport. Lint/browser tools run at exact versions through `npm exec` and are not application runtime dependencies or entries in the committed lockfile. `npm run test:engine` runs only the routing-engine suite; `npm run test:simulation` runs only the Phase 4 simulation suite; `npm run test:packet` and `npm run test:failure` run the Phase 5 feature suites; `npm run test:comparison` runs the Phase 6 comparison suite. `npm run audit` runs the high-severity npm audit gate after dependency installation. `npm run check` runs lint, unit/SSR tests, the production build and browser smoke tests; `npm run check:release` adds the high-severity dependency audit.
 
 ## Application routes
 

@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "npm test && npm run build",
+    "check": "npm run lint && npm test && npm run build && npm run test:e2e",
     "test": "node --test",
     "test:engine": "node --test tests/routing-engine.test.js",
     "test:simulation": "node --test tests/simulation-view-model.test.js",
@@ -16,7 +16,10 @@
     "test:failure": "node --test tests/failure-experiment.test.js",
     "test:comparison": "node --test tests/algorithm-comparison.test.js",
     "audit": "npm audit --audit-level=high",
-    "check:release": "npm run check && npm run audit"
+    "check:release": "npm run check && npm run audit",
+    "lint": "npm exec --yes --package=eslint@10.15.0 -- eslint \"src/**/*.{js,jsx}\" \"tests/**/*.js\" \"scripts/**/*.mjs\" \"vite.config.js\"",
+    "test:e2e": "npm exec --yes --package=playwright@1.65.1 -- node scripts/browser-smoke.mjs",
+    "test:e2e:install": "npm exec --yes --package=playwright@1.65.1 -- playwright install chromium"
   },
   "dependencies": {
     "@xyflow/react": "12.12.1",
