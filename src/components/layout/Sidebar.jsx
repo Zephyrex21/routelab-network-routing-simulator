@@ -74,7 +74,7 @@ export default function Sidebar({ collapsed = false, mobileOpen, onNavigate, onC
           <div className="project-avatar"><Waypoints size={18} strokeWidth={1.7} /></div>
           <div className="project-meta">
             <span className="project-kicker">CURRENT WORKSPACE</span>
-            <strong>{activeProject?.name || 'No project selected'}</strong>
+            <strong>{activeProject?.name || 'No saved project selected'}</strong>
           </div>
           <span className="project-menu-dot" aria-hidden="true">•••</span>
         </div>

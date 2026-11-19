@@ -116,9 +116,13 @@ function NetworkStudioContent() {
   const downLinks = edges.length - activeLinks;
 
   const markDirty = useCallback((topologyChanged = false) => {
+    if (!dirty) {
+      const selectionResult = clearActiveProject();
+      if (!selectionResult.ok) notify(selectionResult.message || 'The active saved-project selection could not be cleared.', 'warning');
+    }
     setDirty(true);
     if (topologyChanged) setTopologyRevision((revision) => revision + 1);
-  }, []);
+  }, [dirty, notify]);
 
   const handleNodesChange = useCallback((changes) => {
     onNodesChange(changes);
@@ -608,9 +612,11 @@ function NetworkStudioContent() {
               <strong>Saved library needs recovery</strong>
               <small>{libraryRecovery.message}</small>
             </div>
-            <Button size="sm" variant="secondary" icon={ArrowDownToLine} onClick={() => downloadLibraryRecoveryBackup(libraryRecovery.rawContent)}>
-              Download raw backup
-            </Button>
+            {typeof libraryRecovery.rawContent === 'string' && (
+              <Button size="sm" variant="secondary" icon={ArrowDownToLine} onClick={() => downloadLibraryRecoveryBackup(libraryRecovery.rawContent)}>
+                Download raw backup
+              </Button>
+            )}
           </div>
         )}
         <div className="phase2-library-list">
