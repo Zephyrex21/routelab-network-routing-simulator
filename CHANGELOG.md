@@ -1,5 +1,14 @@
 # Changelog
 
+## Phase 10.2 — Interactive Learning Mode
+
+- Added prediction challenges based on the next unseen Distance Vector or Link State decision in the simulation event stream.
+- Added answer selection, explicit submission, immediate correctness feedback, concise reasoning and key takeaways before revealing the recorded event.
+- Added focused practice coverage for neighbour-vector use, route-cost updates, convergence, LSA duplicate suppression, Dijkstra settling and relaxation.
+- Kept practice questions derived from existing immutable simulation events; routing engine logic and simulation run contracts remain unchanged.
+- Added responsive practice UI and Chromium browser coverage for the complete predict, submit, feedback and reveal flow.
+
+
 ## Phase 10.1 — Guided Algorithm Explanations
 
 - Added event-aware, student-facing explanations for Distance Vector updates, neighbour advertisements and convergence.

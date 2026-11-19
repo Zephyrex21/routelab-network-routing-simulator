@@ -60,3 +60,21 @@ test('Simulation Studio renders an accessible event-by-event learning explanatio
   const styles = await readText('../src/styles/phase9-simulation-studio.css');
   assert.ok(styles.includes('.simulation-learning-note'));
 });
+
+
+test('Simulation Studio practice mode offers answer selection, feedback and event reveal', async () => {
+  const source = await readText('../src/features/simulation/SimulationPage.jsx');
+  for (const snippet of [
+    'Start practice',
+    'Predict the next decision',
+    'Answer options',
+    'aria-pressed={selectedOptionId === choice.id}',
+    'Check answer',
+    'role="status"',
+    'Reveal step & continue',
+    'getNextLearningChallenge(run, cursor)',
+  ]) assert.ok(source.includes(snippet), `Missing practice-mode interaction: ${snippet}`);
+  const styles = await readText('../src/styles/phase9-simulation-studio.css');
+  assert.ok(styles.includes('.simulation-practice-panel'));
+  assert.ok(styles.includes('@media (max-width: 760px)'));
+});

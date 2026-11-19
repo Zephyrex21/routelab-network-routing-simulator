@@ -19,6 +19,7 @@ import SimulationRouterNode from './components/SimulationRouterNode.jsx';
 import {
   buildLinkStateReplayIndex, getCurrentActivity, getCurrentSnapshotLabel,
   getDistanceVectorTable, getEventExplanation, getEventFacts, getEventLabel, getLinkStateTableAt,
+  getNextLearningChallenge,
   getVisibleEvents,
 } from './model/simulationViewModel.js';
 import {
@@ -49,6 +50,74 @@ function getEventTone(event) {
   if (event.type.includes('updated') || event.type.includes('settled') || event.type.includes('accepted')) return 'info';
   if (event.type.includes('duplicate')) return 'warning';
   return 'neutral';
+}
+
+function LearningPracticePanel({ challenge, onRevealEvent, onClose }) {
+  const [selectedOptionId, setSelectedOptionId] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const isCorrect = submitted && selectedOptionId === challenge?.correctOptionId;
+  const correctOption = challenge?.choices.find((choice) => choice.id === challenge.correctOptionId);
+
+  return (
+    <Card className="simulation-practice-panel" padding="none">
+      <div className="simulation-practice-heading">
+        <div>
+          <span className="eyebrow muted">PHASE 10.2 · INTERACTIVE LEARNING</span>
+          <h2>Predict the next decision</h2>
+          <p>We’re holding the timeline at its current event. Think through the routing rule, choose an answer, then reveal the next step.</p>
+        </div>
+        <Button size="sm" variant="ghost" onClick={onClose}>Close practice</Button>
+      </div>
+
+      {challenge ? (
+        <div className="simulation-practice-content">
+          <div className="simulation-practice-prompt">
+            <Badge tone="info">Next unseen decision</Badge>
+            <span>Challenge · Event #{String(challenge.eventSequence + 1).padStart(3, '0')}</span>
+            <h3>{challenge.question}</h3>
+          </div>
+          <div className="simulation-practice-options" role="group" aria-label="Answer options">
+            {challenge.choices.map((choice, index) => (
+              <button
+                type="button"
+                key={choice.id}
+                className={`simulation-practice-option ${selectedOptionId === choice.id ? 'is-selected' : ''}`}
+                aria-pressed={selectedOptionId === choice.id}
+                disabled={submitted}
+                onClick={() => setSelectedOptionId(choice.id)}
+              >
+                <span>{String.fromCharCode(65 + index)}</span>
+                <b>{choice.label}</b>
+              </button>
+            ))}
+          </div>
+          <div className="simulation-practice-actions">
+            {!submitted ? (
+              <Button size="sm" disabled={!selectedOptionId} onClick={() => setSubmitted(true)}>Check answer</Button>
+            ) : (
+              <>
+                <Badge tone={isCorrect ? 'success' : 'warning'}>{isCorrect ? 'Correct · well reasoned' : 'Not quite · learn from the step'}</Badge>
+                <Button size="sm" onClick={() => onRevealEvent(challenge.eventSequence)}>Reveal step & continue <ArrowRight size={14} /></Button>
+              </>
+            )}
+          </div>
+          {submitted && (
+            <div className={`simulation-practice-feedback ${isCorrect ? 'is-correct' : 'is-incorrect'}`} role="status">
+              <strong>{isCorrect ? 'That’s the right reasoning.' : 'Here’s the reasoning to take away.'}</strong>
+              {!isCorrect && <p><b>Best answer:</b> {correctOption?.label}</p>}
+              <p>{challenge.explanation}</p>
+              <div><b>Key idea</b><span>{challenge.takeaway}</span></div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="simulation-practice-complete">
+          <CheckCircle2 size={20} />
+          <div><strong>You’ve reached the end of the practice checkpoints.</strong><p>Move the event timeline backwards to revisit a decision, or rerun the algorithm to practise another sequence.</p></div>
+        </div>
+      )}
+    </Card>
+  );
 }
 
 function Metric({ label, value, detail }) {
@@ -253,6 +322,7 @@ export default function SimulationPage() {
   const [selectedRouterId, setSelectedRouterId] = useState(project?.routers?.[0]?.id || '');
   const [selectedDestinationId, setSelectedDestinationId] = useState(project?.routers?.[1]?.id || project?.routers?.[0]?.id || '');
   const [runError, setRunError] = useState('');
+  const [isPracticeMode, setIsPracticeMode] = useState(false);
 
   const hasProject = Boolean(project);
   const routerIds = useMemo(() => project?.routers.map((router) => router.id) || [], [project]);
@@ -261,6 +331,7 @@ export default function SimulationPage() {
   const activity = useMemo(() => getCurrentActivity(currentEvent), [currentEvent]);
   const currentEventFacts = useMemo(() => getEventFacts(currentEvent), [currentEvent]);
   const currentEventExplanation = useMemo(() => getEventExplanation(currentEvent), [currentEvent]);
+  const practiceChallenge = useMemo(() => getNextLearningChallenge(run, cursor), [run, cursor]);
   const currentSequence = currentEvent?.sequence ?? -1;
   const snapshotLabel = run && currentSequence >= 0 ? getCurrentSnapshotLabel(run, currentSequence) : 'Waiting for first snapshot';
 
@@ -534,6 +605,27 @@ export default function SimulationPage() {
           snapshotLabel={snapshotLabel}
         />
       </div>
+
+      <div className="simulation-practice-entry">
+        <div>
+          <span className="eyebrow muted">ACTIVE LEARNING</span>
+          <strong>Ready to predict the next routing decision?</strong>
+          <p>{run ? 'Pause the sequence and test your understanding before revealing the next algorithm event.' : 'Run a simulation to unlock prediction challenges for Distance Vector or Link State.'}</p>
+        </div>
+        <Button size="sm" variant="secondary" disabled={!run} onClick={() => {
+          setIsPlaying(false);
+          setIsPracticeMode((current) => !current);
+        }}>{isPracticeMode ? 'Close practice' : 'Start practice'}</Button>
+      </div>
+
+      {isPracticeMode && run && (
+        <LearningPracticePanel
+          key={`${run.startedAt || run.events.length}-${practiceChallenge?.eventSequence ?? 'complete'}`}
+          challenge={practiceChallenge}
+          onRevealEvent={handleSeek}
+          onClose={() => setIsPracticeMode(false)}
+        />
+      )}
 
       <section className="simulation-metrics-block" aria-label="Algorithm run totals">
         <div className="simulation-metrics-intro"><span className="eyebrow muted">RUN TOTALS</span><small>Final model counters for the complete generated run. These are not playback elapsed-time measurements.</small></div>
